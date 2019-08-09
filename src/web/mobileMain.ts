@@ -1,0 +1,12 @@
+import Vue from 'vue'
+import App from './Mobile.vue'
+import router from './mobileRouter'
+// import store from './store'
+
+Vue.config.productionTip = false
+
+new Vue({
+  router,
+  // store,
+  render: h => h(App)
+}).$mount('#app')
