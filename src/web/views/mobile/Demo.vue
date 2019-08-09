@@ -1,5 +1,5 @@
 <template lang="pug">
-  .app mobile test1123333
+  .app mobile t
 </template>
 
 <script lang="ts">
