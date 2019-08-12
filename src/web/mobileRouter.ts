@@ -5,21 +5,21 @@ import Demo from './views/mobile/Demo.vue'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
+  // mode: 'history',
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '/mobile',
+      path: '/',
       name: 'home',
       component: Demo
     },
     {
-      path: '/mobile/about',
-      name: 'about',
+      path: '/interface',
+      name: 'interface',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+      component: () => import(/* webpackChunkName: "interface" */ './views/mobile/Interface.vue')
     }
   ]
 })

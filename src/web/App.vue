@@ -1,13 +1,25 @@
-<template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home123</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+<template lang="pug">
+  router-view
 </template>
+<script lang="ts">
+import Vue from 'vue'
 
+export default Vue.extend({
+  data() {
+    console.log(this.$route)
+    console.log(this.$router.currentRoute.path)
+    return {
+      login: false
+    }
+  },
+  methods: {
+    test() {
+      console.log(this.$route)
+      console.log(this.$router.currentRoute.path)
+    }
+  }
+})
+</script>
 <style>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;

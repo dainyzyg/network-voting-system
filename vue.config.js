@@ -2,11 +2,17 @@
 // console.log(process.env.NODE_ENV)
 // console.log(process.env.SHARINGAN_PROJECT_MODE)
 // console.log('-------------------------------')
+const path = require('path')
+
 let baseConfig = {
-  lintOnSave: false
-  // configureWebpack: {
-  //   devtool: 'source-map'
-  // }
+  lintOnSave: false,
+  configureWebpack: {
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'src/web/')
+      }
+    }
+  }
   // publicPath: './',
 }
 
@@ -79,6 +85,7 @@ let dualConfig = {
 // module.exports = exportsConfig
 
 module.exports = {
+  ...baseConfig,
   outputDir: 'dist/web',
   pages: {
     index: {
