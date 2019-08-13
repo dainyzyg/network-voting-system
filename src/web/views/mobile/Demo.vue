@@ -138,6 +138,9 @@ body {
   background: white;
   overflow: scroll;
 }
+.VoteContent::-webkit-scrollbar {
+  display: none;
+}
 .VoteItem {
   margin: 10px 10px;
   height: 80px;
