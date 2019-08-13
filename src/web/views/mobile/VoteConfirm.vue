@@ -3,25 +3,17 @@
     .ConfirmTitle 投票结果确认
     .VoteRank
       .RankFirstTitle 一等奖
-      .RankFirstTable
-        .FirstName 采用线性光束检测改造化工装置火灾感烟探测器，提高火灾预警能力
-      .RankFirstTable
-        .FirstName 采用线性光束检测改造化工装置火灾感烟探测器，提高火灾预警能力
-      .RankFirstTable
-        .FirstName 采用线性光束检测改造化工装置火灾感烟探测器，提高火灾预警能力
-      .RankFirstTable
-        .FirstName 采用线性光束检测改造化工装置火灾感烟探测器，提高火灾预警能力
-      .RankFirstTable
-        .FirstName 采用线性光束检测改造化工装置火灾感烟探测器，提高火灾预警能力
+      .RankFirstTable(v-for="Item in Items" :key="Item.id")
+        .FirstName {{Item.ItemTitle}}
       .RankSecondTitle 二等奖
-      .RankSecondTable
-        .SecondName
+      .RankSecondTable(v-for="Item in Items" :key="Item.id")
+        .SecondName {{Item.ItemTitle}}
       .RankThirdTitle 三等奖
-      .RankThirdTable
-        .ThirdName
+      .RankThirdTable(v-for="Item in Items" :key="Item.id")
+        .ThirdName {{Item.ItemTitle}}
       .DisLikeTitle 不入选
-      .DisLikeTable
-        .DisLikeName
+      .DisLikeTable(v-for="Item in Items" :key="Item.id")
+        .DisLikeName {{Item.ItemTitle}}
       .ConfirmSubmit
         .Confirm 确认
         .Cancel 取消
@@ -29,10 +21,21 @@
 
 <script lang="ts">
 import Vue from 'vue'
+interface Item {
+  ItemTitle: string
+}
+let Items: Item[] = []
+for (let i = 0; i < 10; i++) {
+  Items.push({
+    ItemTitle: '采用线性光束检测改造化工装置火灾感烟探测器，提高火灾预警能力'
+  })
+}
 export default Vue.extend({
   name: 'home',
   data() {
-    return {}
+    return {
+      Items: Items
+    }
   },
   methods: {}
 })
@@ -108,27 +111,28 @@ body {
 .DisLikeName {
   width: 230px;
 }
-.ConfirmSubmit{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin:10px 5px;
+.ConfirmSubmit {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 5px;
 }
-.Confirm,.Cancel{
-    height:40px;
-    width:100px;
-    font-size: 20px;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.Confirm,
+.Cancel {
+  height: 40px;
+  width: 100px;
+  font-size: 20px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.Confirm{
-    background: #FFDD3E;
-    color:#314C6C
+.Confirm {
+  background: #ffdd3e;
+  color: #314c6c;
 }
-.Cancel{
-    background: darkgray;
-    color:white
+.Cancel {
+  background: darkgray;
+  color: white;
 }
 </style>

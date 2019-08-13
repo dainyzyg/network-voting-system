@@ -25,6 +25,11 @@ export default new Router({
       path: '/VoteConfirm',
       name: 'VoteConfirm',
       component: () => import(/* webpackChunkName: "interface" */ './views/mobile/VoteConfirm.vue')
+    },
+    {
+      path: '/SecondRoundVote',
+      name: 'SecondRoundVote',
+      component: () => import(/* webpackChunkName: "interface" */ './views/mobile/SecondRoundVote.vue')
     }
   ]
 })
