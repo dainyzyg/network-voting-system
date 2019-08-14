@@ -20,8 +20,7 @@
           .ThirdCount {{thirdCount}}
         .RankDislike
           .DislikeTitle 不入选
-          .DislikeCount {{dislikeCount}}
-        
+          .DislikeCount {{dislikeCount}}    
     .VoteContent
       .VoteItem(v-for="Item,index in projects" :key="Item.id")
         .ItemOrder {{index+1}}
@@ -113,8 +112,8 @@ export default {
       this.$set(Item, 'score', score)
     },
     judgeData() {
-      this.show = true
-      return
+      // this.show = true
+      // return
       // this.$router.push('/SecondRoundVote?id=123132')
       for (let i in this.projects) {
         let item = this.projects[i]
@@ -123,7 +122,8 @@ export default {
           return
         }
       }
-      alert('success')
+      this.show = true
+      // alert('success')
     },
     getQueryVariable(variable) {
       var query = window.location.href.split('?')[1]
@@ -142,7 +142,8 @@ export default {
         votingResult: this.projects
       }
       let r = await this.$axios.post('votingRound1', data)
-      console.log(r)
+      // console.log(r)
+      // alert('您的第一轮投票结束，谢谢参与！')
     }
   },
   computed: {

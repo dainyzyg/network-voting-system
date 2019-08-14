@@ -8,7 +8,7 @@
         .VoterTitle 投票人
         .VoterName {{userInfo.name}}
     .VoteContent
-      .VoteItem(v-for="Item,index in projects" :key="Item.id")
+      .VoteItem(v-for="Item,index in Round1Result" :key="Item.id")
         .ItemOrder {{index+1}}
         .ItemInfo
           .ItemName
@@ -18,13 +18,13 @@
               .ClassName {{Item.group}}
           .ItemVote
             .CurrentRank
-              .CurrentTitle 当前评级
-              .CurrentRankName 一等奖
-            .VoteThird(@click="VoteThird(Item)") 
-              img(:src="Item.score===5?LikeBlue:LikeGray")
+              .CurrentTitle 推荐评级
+              .CurrentRankName {{Item.scoreTotal}}
+            .VoteThird(@click="Vote(Item,true)") 
+              img(:src="Item.trust===true?LikeBlue:LikeGray")
               .VoteThirdTitle 同意
-            .VoteDisagree(@click="VoteDisLike(Item)") 
-              img(:src="Item.score===0?DisLikeRed:DisLike")
+            .VoteDisagree(@click="Vote(Item,false)") 
+              img(:src="Item.trust===false?DisLikeRed:DisLike")
               .VoteDisagreeTitle 不同意
       .VoteSubmit(@click="judgeData") 提交投票
 </template>
@@ -34,7 +34,7 @@ export default {
   data() {
     return {
       userInfo: {},
-      projects: [],
+      Round1Result: [],
       LikeGray: './LikeGray.png',
       LikeBlue: './LikeBlue.png',
       DisLikeRed: './DisLikeRed.png',
@@ -43,7 +43,8 @@ export default {
   },
   async created() {
     await this.getUser()
-    await this.getProjects()
+    await this.getRound1Result()
+    await this.votingRound2()
   },
   methods: {
     async getUser() {
@@ -59,24 +60,38 @@ export default {
       }
       this.userInfo = r.data
     },
-    async getProjects() {
-      let r = await this.$axios.get('getProjects')
-      console.log(r.data)
-      this.projects = r.data
+    // async getProjects() {
+    //   let r = await this.$axios.get('getProjects')
+    //   console.log(r.data)
+    //   this.projects = r.data
+    // },
+    async getRound1Result() {
+      let r = await this.$axios.get('getRound1Result')
+      console.log(r)
+      this.Round1Result = r.data
     },
-    Vote(Item, score) {
-      this.$set(Item, 'score', score)
+    async votingRound2() {
+      let data = {
+        votingUserID: this.userInfo.id,
+        votingResult: this.Round1Result
+      }
+      let r = await this.$axios.post('votingRound2', data)
+      console.log(r)
+    },
+    Vote(Item, trust) {
+      this.$set(Item, 'trust', trust)
+      console.log(Item)
     },
     judgeData() {
       // this.$router.push('/SecondRoundVote?id=123132')
-      for (let i in this.projects) {
-        let item = this.projects[i]
-        if (item.score === undefined) {
-          alert(`有未投票的项目：${parseInt(i) + 1}.${item.name}`)
+      for (let i in this.Round1Result) {
+        let sr = this.Round1Result[i]
+        if (sr.trust === undefined) {
+          alert(`有未投票的项目：${parseInt(i) + 1}.${sr.name}`)
           return
         }
       }
-      alert('success')
+      this.votingRound2()
     },
     getQueryVariable(variable) {
       var query = window.location.href.split('?')[1]
@@ -133,7 +148,7 @@ export default {
 }
 .CurrentRank {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-around;
   align-items: center;
   width: 100px;
   height: 25px;
