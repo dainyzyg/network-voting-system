@@ -3,25 +3,10 @@
     .VoteHeader
       .VoteTitle1 兰州石化公司
       .VoteTitle2 2018年度科学技术奖投票活动
-      .VoteOrder (第一轮：推荐投票)
+      .VoteOrder (第二轮：信任投票)
       .Voter
         .VoterTitle 投票人
-        .VoterName 张三
-      .CurrentRank
-        .RankTitle 当前票数
-        .RankFirst
-          .FirstTitle 一等奖
-          .FirstCount 9
-        .RankSecond
-          .SecondTitle 二等奖
-          .SecondCount 15
-        .RankThird
-          .ThirdTitle 三等奖
-          .ThirdCount 18
-        .RankDislike
-          .DislikeTitle 不入选
-          .DislikeCount 9
-        
+        .VoterName 张三     
     .VoteContent
       .VoteItem(v-for="Item in Items" :key="Item.id")
         .ItemOrder {{Item.ItemOrder}}
@@ -32,18 +17,15 @@
               .ClassTitle 类别
               .ClassName {{Item.ClassName}}
           .ItemVote
-            .VoteFirst(@click="VoteFirst(Item)") 
-              img(:src="FirstIMG")
-              .VoteFirstTitle 一等奖
-            .VoteSecond(@click="VoteSecond(Item)") 
-              img(:src="SecondIMG")
-              .VoteSecondTitle 二等奖
+            .CurrentRank
+              .CurrentTitle 当前评级
+              .CurrentRankName 一等奖
             .VoteThird(@click="VoteThird(Item)") 
               img(:src="ThirdIMG")
-              .VoteThirdTitle 三等奖
+              .VoteThirdTitle 同意
             .VoteDisagree(@click="VoteDisLike(Item)") 
               img(:src="DisLikeIMG")
-              .VoteDisagreeTitle 不入选
+              .VoteDisagreeTitle 不同意
       .VoteSubmit(@click="") 提交投票
 </template>
 
@@ -146,28 +128,6 @@ body {
   font-size: 14px;
   color:#2e89dc;
 }
-.CurrentRank,.RankFirst,.RankSecond,.RankThird,.RankDislike{
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.CurrentRank{
-  width: 100%
-}
-.RankTitle{
-  font-size: 14px;
-  color:#2e89dc;
-}
-.RankFirst,.RankSecond,.RankThird,.RankDislike{
-  height:20px;
-  width:60px;
-  background: white;
-  border-radius: 8px;
-}
-.FirstTitle,.FirstCount,.SecondTitle,.SecondCount,.ThirdTitle,.ThirdCount,.DislikeTitle,.DislikeCount{
-  font-size: 12px;
-  color: #2e89dc
-}
 .VoteContent {
   width: 100vw;
   background: white;
@@ -250,8 +210,19 @@ body {
   justify-content: space-between;
   align-items: center;
 }
-.VoteFirst,
-.VoteSecond,
+.CurrentRank{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width:100px;
+  height:25px;
+  line-height: 25px;
+  background: white;
+  color:#2e89dc;
+  font-size: 12px;
+  margin-top: 5px;
+  border-radius: 8px;
+}
 .VoteThird,
 .VoteDisagree {
   height: 25px;
@@ -264,6 +235,7 @@ body {
   margin-top: 5px;
   border-radius: 8px;
   display: flex;
+  justify-content: center;
   align-items: center;
 }
 .VoteSubmit{
