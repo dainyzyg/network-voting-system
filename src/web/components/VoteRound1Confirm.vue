@@ -4,16 +4,16 @@ Modal(:show='show')
     .ConfirmTitle 投票结果确认
     .VoteRank
       .RankFirstTitle 一等奖
-      .RankFirstTable(v-for="Item in Items" :key="Item.id")
-        .FirstName {{Item.ItemTitle}}
+      .RankFirstTable(v-for="Item in firstProjects" :key="Item.id")
+        .FirstName {{Item.name}}
       .RankSecondTitle 二等奖
-      .RankSecondTable(v-for="Item in Items" :key="Item.id")
+      .RankSecondTable(v-for="Item in firstProjects" :key="Item.id")
         .SecondName {{Item.ItemTitle}}
       .RankThirdTitle 三等奖
-      .RankThirdTable(v-for="Item in Items" :key="Item.id")
+      .RankThirdTable(v-for="Item in firstProjects" :key="Item.id")
         .ThirdName {{Item.ItemTitle}}
       .DisLikeTitle 不入选
-      .DisLikeTable(v-for="Item in Items" :key="Item.id")
+      .DisLikeTable(v-for="Item in firstProjects" :key="Item.id")
         .DisLikeName {{Item.ItemTitle}}
       .ConfirmSubmit
         .Confirm 确认
@@ -24,31 +24,27 @@ Modal(:show='show')
 import Vue from 'vue'
 import Modal from '@/components/Modal.vue'
 
-let Items = []
-for (let i = 0; i < 10; i++) {
-  Items.push({
-    ItemTitle: '采用线性光束检测改造化工装置火灾感烟探测器，提高火灾预警能力'
-  })
-}
 export default {
   name: 'home',
   components: {
     Modal
   },
-  props: {
-    show: {
-      default: false
-    }
-  },
+  props: ['show', 'projects'],
   data() {
-    return {
-      Items: Items
-    }
+    return {}
   },
   methods: {
     close() {
       console.log('close')
       this.$emit('update:show', false)
+    }
+  },
+  computed: {
+    firstProjects() {
+      if (this.projects && this.projects.length > 0) {
+        return this.projects.filter(i => i.score === 5)
+      }
+      return []
     }
   }
 }

@@ -45,7 +45,7 @@
               img(:src="Item.score===0?DisLikeRed:DisLike")
               .VoteDisagreeTitle 不入选
       .VoteSubmit(@click="judgeData") 提交投票
-    VoteRound1Confirm(:show.sync='show')
+    VoteRound1Confirm(:show.sync='show' :projects='projects')
 </template>
 
 <script>
