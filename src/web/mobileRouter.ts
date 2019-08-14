@@ -27,6 +27,11 @@ export default new Router({
       component: () => import(/* webpackChunkName: "interface" */ './views/mobile/VoteConfirm.vue')
     },
     {
+      path: '/Management',
+      name: 'Management',
+      component: () => import(/* webpackChunkName: "interface" */ './views/mobile/Management.vue')
+    },
+    {
       path: '/SecondRoundVote',
       name: 'SecondRoundVote',
       component: () => import(/* webpackChunkName: "interface" */ './views/mobile/SecondRoundVote.vue')
