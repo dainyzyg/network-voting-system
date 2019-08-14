@@ -4,6 +4,7 @@ export default {
   install(Vue, options = {}) {
     let axiosOptions: AxiosRequestConfig = {
       baseURL: 'http://127.0.0.1:80/',
+      // baseURL: 'http://172.20.10.3:80/',
       ...options
     }
     const instance = axios.create(axiosOptions)

@@ -1,9 +1,5 @@
 <template lang="pug">
-  .app
-    //- .nav
-    //-   router-link(to="/mobile") Home
-    //-   router-link(to="/mobile/about") About
-    router-view
+  router-view
 </template>
 
 <style>

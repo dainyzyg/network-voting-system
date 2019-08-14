@@ -6,7 +6,7 @@
       .VoteOrder (第一轮：推荐投票)
       .Voter
         .VoterTitle 投票人
-        .VoterName {{userInfo.name}}
+        .VoterName 张三
       .CurrentRank
         .RankTitle 当前票数
         .RankFirst
@@ -23,92 +23,89 @@
           .DislikeCount 9
         
     .VoteContent
-      .VoteItem(v-for="Item,index in projects" :key="Item.id")
-        .ItemOrder {{index+1}}
+      .VoteItem(v-for="Item in Items" :key="Item.id")
+        .ItemOrder {{Item.ItemOrder}}
         .ItemInfo
           .ItemName
-            .ItemTitle {{Item.name}}
+            .ItemTitle {{Item.ItemTitle}}
             .ItemClass
               .ClassTitle 类别
-              .ClassName {{Item.group}}
+              .ClassName {{Item.ClassName}}
           .ItemVote
-            .VoteFirst(@click="Vote(Item,5)") 
-              img(:src="Item.score===5?LikeBlue:LikeGray")
+            .VoteFirst(@click="VoteFirst(Item)") 
+              img(:src="FirstIMG")
               .VoteFirstTitle 一等奖
-            .VoteSecond(@click="Vote(Item,3)") 
-              img(:src="Item.score===3?LikeBlue:LikeGray")
+            .VoteSecond(@click="VoteSecond(Item)") 
+              img(:src="SecondIMG")
               .VoteSecondTitle 二等奖
-            .VoteThird(@click="Vote(Item,2)") 
-              img(:src="Item.score===2?LikeBlue:LikeGray")
+            .VoteThird(@click="VoteThird(Item)") 
+              img(:src="ThirdIMG")
               .VoteThirdTitle 三等奖
-            .VoteDisagree(@click="Vote(Item,0)") 
-              img(:src="Item.score===0?DisLikeRed:DisLike")
+            .VoteDisagree(@click="VoteDisLike(Item)") 
+              img(:src="DisLikeIMG")
               .VoteDisagreeTitle 不入选
-      .VoteSubmit(@click="judgeData") 提交投票
+      .VoteSubmit(@click="") 提交投票
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue'
+interface Item {
+  ItemOrder: number
+  ItemTitle: string
+  ClassName: string
+  ItemGrade: number
+}
+let Items: Item[] = []
+for (let i = 1; i <= 56; i++) {
+  Items.push({
+    ItemOrder: i,
+    ItemTitle: '采用线性光束检测改造化工装置火灾感烟探测器，提高火灾预警能力',
+    ClassName: '生产工艺',
+    ItemGrade: 0
+  })
+}
+export default Vue.extend({
+  name: 'home',
   data() {
     return {
-      userInfo: {},
-      projects: [],
-      LikeGray: './LikeGray.png',
-      LikeBlue: './LikeBlue.png',
-      DisLikeRed: './DisLikeRed.png',
-      DisLike: './DisLike.png'
+      Items: Items,
+      FirstIMG: './LikeGray.png',
+      SecondIMG: './LikeGray.png',
+      ThirdIMG: './LikeGray.png',
+      DisLikeIMG: './DisLike.png'
     }
-  },
-  async created() {
-    await this.getUser()
-    await this.getProjects()
   },
   methods: {
-    async getUser() {
-      let userID = this.getQueryVariable('id')
-      let r = await this.$axios.get('getUser', {
-        params: {
-          userID: userID
-        }
-      })
-      console.log(r)
-      if (!r.data) {
-        throw new Error('无效的用户名！')
-      }
-      this.userInfo = r.data
+    VoteFirst: function(o: any) {
+      o.ItemGrade = 1
+      this.FirstIMG = './LikeRed.png'
+      this.SecondIMG = './LikeGray.png'
+      this.ThirdIMG = './LikeGray.png'
+      this.DisLikeIMG = './DisLike.png'
     },
-    async getProjects() {
-      let r = await this.$axios.get('getProjects')
-      console.log(r.data)
-      this.projects = r.data
+    VoteSecond: function(p: any) {
+      p.ItemGrade = 2
+      this.FirstIMG = './LikeGray.png'
+      this.SecondIMG = './LikeYellow.png'
+      this.ThirdIMG = './LikeGray.png'
+      this.DisLikeIMG = './DisLike.png'
     },
-    Vote(Item, score) {
-      this.$set(Item, 'score', score)
+    VoteThird: function(q: any) {
+      q.ItemGrade = 3
+      this.FirstIMG = './LikeGray.png'
+      this.SecondIMG = './LikeGray.png'
+      this.ThirdIMG = './LikeBlue.png'
+      this.DisLikeIMG = './DisLike.png'
     },
-    judgeData() {
-      // this.$router.push('/SecondRoundVote?id=123132')
-      for (let i in this.projects) {
-        let item = this.projects[i]
-        if (item.score === undefined) {
-          alert(`有未投票的项目：${parseInt(i) + 1}.${item.name}`)
-          return
-        }
-      }
-      alert('success')
-    },
-    getQueryVariable(variable) {
-      var query = window.location.href.split('?')[1]
-      var vars = query.split('&')
-      for (var i = 0; i < vars.length; i++) {
-        var pair = vars[i].split('=')
-        if (pair[0] == variable) {
-          return pair[1]
-        }
-      }
-      return false
+    VoteDisLike: function(r: any) {
+      r.ItemGrade = 4
+      this.FirstIMG = './LikeGray.png'
+      this.SecondIMG = './LikeGray.png'
+      this.ThirdIMG = './LikeGray.png'
+      this.DisLikeIMG = './DisLikeRed.png'
     }
   }
-}
+})
 </script>
 <style>
 body {
@@ -160,7 +157,7 @@ body {
 .RankThird,
 .RankDislike {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: center;
 }
 .CurrentRank {
