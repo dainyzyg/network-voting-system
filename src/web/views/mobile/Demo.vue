@@ -11,16 +11,16 @@
         .RankTitle 当前票数
         .RankFirst
           .FirstTitle 一等奖
-          .FirstCount 9
+          .FirstCount {{firstCount}}
         .RankSecond
           .SecondTitle 二等奖
-          .SecondCount 15
+          .SecondCount {{secondCount}}
         .RankThird
           .ThirdTitle 三等奖
-          .ThirdCount 18
+          .ThirdCount {{thirdCount}}
         .RankDislike
           .DislikeTitle 不入选
-          .DislikeCount 9
+          .DislikeCount {{dislikeCount}}
         
     .VoteContent
       .VoteItem(v-for="Item,index in projects" :key="Item.id")
@@ -45,12 +45,19 @@
               img(:src="Item.score===0?DisLikeRed:DisLike")
               .VoteDisagreeTitle 不入选
       .VoteSubmit(@click="judgeData") 提交投票
+    VoteRound1Confirm(:show.sync='show')
 </template>
 
 <script>
+import VoteRound1Confirm from '@/components/VoteRound1Confirm.vue'
+
 export default {
+  components: {
+    VoteRound1Confirm
+  },
   data() {
     return {
+      show: false,
       userInfo: {},
       projects: [],
       LikeGray: './LikeGray.png',
@@ -83,9 +90,31 @@ export default {
       this.projects = r.data
     },
     Vote(Item, score) {
+      switch (score) {
+        case 5:
+          if (this.firstCount >= 9) {
+            alert('一等奖不能超过9个！')
+            return
+          }
+          break
+        case 3:
+          if (this.secondCount >= 19) {
+            alert('二等奖不能超过19个！')
+            return
+          }
+          break
+        case 2:
+          if (this.thirdCount >= 28) {
+            alert('三等奖不能超过28个！')
+            return
+          }
+          break
+      }
       this.$set(Item, 'score', score)
     },
     judgeData() {
+      this.show = true
+      return
       // this.$router.push('/SecondRoundVote?id=123132')
       for (let i in this.projects) {
         let item = this.projects[i]
@@ -107,15 +136,24 @@ export default {
       }
       return false
     }
+  },
+  computed: {
+    firstCount() {
+      return this.projects.filter(p => p.score === 5).length
+    },
+    secondCount() {
+      return this.projects.filter(p => p.score === 3).length
+    },
+    thirdCount() {
+      return this.projects.filter(p => p.score === 2).length
+    },
+    dislikeCount() {
+      return this.projects.filter(p => p.score === 0).length
+    }
   }
 }
 </script>
-<style>
-body {
-  height: 100vh;
-  width: 100vw;
-  margin: 0;
-}
+<style scoped>
 .NetWorkVoting {
   display: flex;
   flex-direction: column;

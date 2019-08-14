@@ -2,12 +2,12 @@
   .app
     .result {{result}}
     .btn(@click="openModal") 设置当前为第一轮投票
-    .btn(@click="getProjects") 设置当前为第二轮投票
-    .btn(@click="getUser") 查看第一轮投票人数
-    .btn(@click="getRound") 查看第一轮投票结果
-    .btn(@click="setRound") 查看第二轮投票人数
-    .btn(@click="votingRound1") 查看第二轮投票结果
-    .btn(@click="votingRound2") 重置投票数据
+    .btn(@click="openModal") 设置当前为第二轮投票
+    .btn(@click="openModal") 查看第一轮投票人数
+    .btn(@click="openModal") 查看第一轮投票结果
+    .btn(@click="openModal") 查看第二轮投票人数
+    .btn(@click="openModal") 查看第二轮投票结果
+    .btn(@click="openModal") 重置投票数据
     Modal(:show.sync="show")
 </template>
 

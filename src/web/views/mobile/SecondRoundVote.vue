@@ -92,12 +92,7 @@ export default {
   }
 }
 </script>
-<style>
-body {
-  height: 100vh;
-  width: 100vw;
-  margin: 0;
-}
+<style scoped>
 .NetWorkVoting {
   display: flex;
   flex-direction: column;
@@ -136,15 +131,15 @@ body {
   font-size: 14px;
   color: #2e89dc;
 }
-.CurrentRank{
+.CurrentRank {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  width:100px;
-  height:25px;
+  width: 100px;
+  height: 25px;
   line-height: 25px;
   background: white;
-  color:#2e89dc;
+  color: #2e89dc;
   font-size: 12px;
   margin-top: 5px;
   border-radius: 8px;
