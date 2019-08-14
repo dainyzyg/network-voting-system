@@ -61,7 +61,7 @@ body {
   overflow: hidden;
 }
 .ConfirmTitle {
-  height: 50px;
+  flex:0 0 50px;
   line-height: 50px;
   text-align: center;
   width: 100%;

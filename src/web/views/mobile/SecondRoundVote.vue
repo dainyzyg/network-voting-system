@@ -7,20 +7,6 @@
       .Voter
         .VoterTitle 投票人
         .VoterName {{userInfo.name}}
-    //-   .CurrentRank
-    //-     .RankTitle 当前票数
-    //-     .RankFirst
-    //-       .FirstTitle 一等奖
-    //-       .FirstCount 9
-    //-     .RankSecond
-    //-       .SecondTitle 二等奖
-    //-       .SecondCount 15
-    //-     .RankThird
-    //-       .ThirdTitle 三等奖
-    //-       .ThirdCount 18
-    //-     .RankDislike
-    //-       .DislikeTitle 不入选
-    //-       .DislikeCount 9
     .VoteContent
       .VoteItem(v-for="Item,index in projects" :key="Item.id")
         .ItemOrder {{index+1}}
@@ -31,18 +17,6 @@
               .ClassTitle 类别
               .ClassName {{Item.group}}
           .ItemVote
-            //- .VoteFirst(@click="Vote(Item,5)") 
-            //-   img(:src="Item.score===5?LikeBlue:LikeGray")
-            //-   .VoteFirstTitle 一等奖
-            //- .VoteSecond(@click="Vote(Item,3)") 
-            //-   img(:src="Item.score===3?LikeBlue:LikeGray")
-            //-   .VoteSecondTitle 二等奖
-            //- .VoteThird(@click="Vote(Item,2)") 
-            //-   img(:src="Item.score===2?LikeBlue:LikeGray")
-            //-   .VoteThirdTitle 三等奖
-            //- .VoteDisagree(@click="Vote(Item,0)") 
-            //-   img(:src="Item.score===0?DisLikeRed:DisLike")
-            //-   .VoteDisagreeTitle 不入选
             .CurrentRank
               .CurrentTitle 当前评级
               .CurrentRankName 一等奖
@@ -162,42 +136,6 @@ body {
   font-size: 14px;
   color: #2e89dc;
 }
-/* .CurrentRank,
-.RankFirst,
-.RankSecond,
-.RankThird,
-.RankDislike {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
-.CurrentRank {
-  width: 100%;
-}
-.RankTitle {
-  font-size: 14px;
-  color: #2e89dc;
-}
-.RankFirst,
-.RankSecond,
-.RankThird,
-.RankDislike {
-  height: 20px;
-  width: 60px;
-  background: white;
-  border-radius: 8px;
-}
-.FirstTitle,
-.FirstCount,
-.SecondTitle,
-.SecondCount,
-.ThirdTitle,
-.ThirdCount,
-.DislikeTitle,
-.DislikeCount {
-  font-size: 12px;
-  color: #2e89dc;
-} */
 .CurrentRank{
   display: flex;
   justify-content: space-evenly;
