@@ -6,88 +6,117 @@
       .VoteOrder (第二轮：信任投票)
       .Voter
         .VoterTitle 投票人
-        .VoterName 张三     
+        .VoterName {{userInfo.name}}
+    //-   .CurrentRank
+    //-     .RankTitle 当前票数
+    //-     .RankFirst
+    //-       .FirstTitle 一等奖
+    //-       .FirstCount 9
+    //-     .RankSecond
+    //-       .SecondTitle 二等奖
+    //-       .SecondCount 15
+    //-     .RankThird
+    //-       .ThirdTitle 三等奖
+    //-       .ThirdCount 18
+    //-     .RankDislike
+    //-       .DislikeTitle 不入选
+    //-       .DislikeCount 9
     .VoteContent
-      .VoteItem(v-for="Item in Items" :key="Item.id")
-        .ItemOrder {{Item.ItemOrder}}
+      .VoteItem(v-for="Item,index in projects" :key="Item.id")
+        .ItemOrder {{index+1}}
         .ItemInfo
           .ItemName
-            .ItemTitle {{Item.ItemTitle}}
+            .ItemTitle {{Item.name}}
             .ItemClass
               .ClassTitle 类别
-              .ClassName {{Item.ClassName}}
+              .ClassName {{Item.group}}
           .ItemVote
+            //- .VoteFirst(@click="Vote(Item,5)") 
+            //-   img(:src="Item.score===5?LikeBlue:LikeGray")
+            //-   .VoteFirstTitle 一等奖
+            //- .VoteSecond(@click="Vote(Item,3)") 
+            //-   img(:src="Item.score===3?LikeBlue:LikeGray")
+            //-   .VoteSecondTitle 二等奖
+            //- .VoteThird(@click="Vote(Item,2)") 
+            //-   img(:src="Item.score===2?LikeBlue:LikeGray")
+            //-   .VoteThirdTitle 三等奖
+            //- .VoteDisagree(@click="Vote(Item,0)") 
+            //-   img(:src="Item.score===0?DisLikeRed:DisLike")
+            //-   .VoteDisagreeTitle 不入选
             .CurrentRank
               .CurrentTitle 当前评级
               .CurrentRankName 一等奖
             .VoteThird(@click="VoteThird(Item)") 
-              img(:src="ThirdIMG")
+              img(:src="Item.score===5?LikeBlue:LikeGray")
               .VoteThirdTitle 同意
             .VoteDisagree(@click="VoteDisLike(Item)") 
-              img(:src="DisLikeIMG")
+              img(:src="Item.score===0?DisLikeRed:DisLike")
               .VoteDisagreeTitle 不同意
-      .VoteSubmit(@click="") 提交投票
+      .VoteSubmit(@click="judgeData") 提交投票
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
-interface Item {
-  ItemOrder: number
-  ItemTitle: string
-  ClassName: string
-  ItemGrade: number
-}
-let Items: Item[] = []
-for (let i = 1; i <= 56; i++) {
-  Items.push({
-    ItemOrder: i,
-    ItemTitle: '采用线性光束检测改造化工装置火灾感烟探测器，提高火灾预警能力',
-    ClassName: '生产工艺',
-    ItemGrade: 0
-  })
-}
-export default Vue.extend({
-  name: 'home',
+<script>
+export default {
   data() {
     return {
-      Items: Items,
-      FirstIMG: './LikeGray.png',
-      SecondIMG: './LikeGray.png',
-      ThirdIMG: './LikeGray.png',
-      DisLikeIMG: './DisLike.png',
+      userInfo: {},
+      projects: [],
+      LikeGray: './LikeGray.png',
+      LikeBlue: './LikeBlue.png',
+      DisLikeRed: './DisLikeRed.png',
+      DisLike: './DisLike.png'
     }
   },
+  async created() {
+    await this.getUser()
+    await this.getProjects()
+  },
   methods: {
-    VoteFirst: function(o: any) {
-      o.ItemGrade = 1
-      this.FirstIMG = './LikeRed.png'
-      this.SecondIMG = './LikeGray.png'
-      this.ThirdIMG = './LikeGray.png'
-      this.DisLikeIMG='./DisLike.png'
+    async getUser() {
+      let userID = this.getQueryVariable('id')
+      let r = await this.$axios.get('getUser', {
+        params: {
+          userID: userID
+        }
+      })
+      console.log(r)
+      if (!r.data) {
+        throw new Error('无效的用户名！')
+      }
+      this.userInfo = r.data
     },
-    VoteSecond: function(p: any) {
-      p.ItemGrade = 2
-      this.FirstIMG = './LikeGray.png'
-      this.SecondIMG = './LikeYellow.png'
-      this.ThirdIMG = './LikeGray.png'
-      this.DisLikeIMG='./DisLike.png'
+    async getProjects() {
+      let r = await this.$axios.get('getProjects')
+      console.log(r.data)
+      this.projects = r.data
     },
-    VoteThird: function(q: any) {
-      q.ItemGrade = 3
-      this.FirstIMG = './LikeGray.png'
-      this.SecondIMG = './LikeGray.png'
-      this.ThirdIMG = './LikeBlue.png'
-      this.DisLikeIMG='./DisLike.png'
+    Vote(Item, score) {
+      this.$set(Item, 'score', score)
     },
-    VoteDisLike: function(r: any) {
-      r.ItemGrade = 4
-      this.FirstIMG = './LikeGray.png'
-      this.SecondIMG = './LikeGray.png'
-      this.ThirdIMG = './LikeGray.png'
-      this.DisLikeIMG='./DisLikeRed.png'
+    judgeData() {
+      // this.$router.push('/SecondRoundVote?id=123132')
+      for (let i in this.projects) {
+        let item = this.projects[i]
+        if (item.score === undefined) {
+          alert(`有未投票的项目：${parseInt(i) + 1}.${item.name}`)
+          return
+        }
+      }
+      alert('success')
+    },
+    getQueryVariable(variable) {
+      var query = window.location.href.split('?')[1]
+      var vars = query.split('&')
+      for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=')
+        if (pair[0] == variable) {
+          return pair[1]
+        }
+      }
+      return false
     }
   }
-})
+}
 </script>
 <style>
 body {
@@ -104,38 +133,109 @@ body {
   width: 100vw;
 }
 .VoteHeader {
-  height: 196px;
+  /* height: 196px; */
+  flex: 0 0 140px;
   width: 100vw;
   background: #a9e0ff;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center
+  align-items: center;
+  overflow: hidden;
 }
-.VoteTitle1,.VoteTitle2,.VoteOrder{
-  margin:5px 5px;
-  color:#2e89dc;
-  font-size: 18px;
+.VoteTitle1,
+.VoteTitle2,
+.VoteOrder {
+  color: #2e89dc;
+  font-size: 16px;
+  line-height: 24px;
   font-weight: bold;
 }
-.Voter{
+.Voter {
   display: flex;
   flex-direction: row;
   margin-bottom: 5px;
 }
-.VoterTitle,.VoterName{
-  margin: 5px 5px;
+.VoterTitle,
+.VoterName {
+  margin: 0 5px;
   font-size: 14px;
+  color: #2e89dc;
+}
+/* .CurrentRank,
+.RankFirst,
+.RankSecond,
+.RankThird,
+.RankDislike {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.CurrentRank {
+  width: 100%;
+}
+.RankTitle {
+  font-size: 14px;
+  color: #2e89dc;
+}
+.RankFirst,
+.RankSecond,
+.RankThird,
+.RankDislike {
+  height: 20px;
+  width: 60px;
+  background: white;
+  border-radius: 8px;
+}
+.FirstTitle,
+.FirstCount,
+.SecondTitle,
+.SecondCount,
+.ThirdTitle,
+.ThirdCount,
+.DislikeTitle,
+.DislikeCount {
+  font-size: 12px;
+  color: #2e89dc;
+} */
+.CurrentRank{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width:100px;
+  height:25px;
+  line-height: 25px;
+  background: white;
   color:#2e89dc;
+  font-size: 12px;
+  margin-top: 5px;
+  border-radius: 8px;
+}
+.VoteThird,
+.VoteDisagree {
+  height: 25px;
+  width: 60px;
+  background: white;
+  color: gray;
+  font-size: 12px;
+  text-align: center;
+  line-height: 25px;
+  margin-top: 5px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .VoteContent {
   width: 100vw;
+  flex: 1;
   background: white;
+  -webkit-overflow-scrolling: touch;
   overflow: scroll;
 }
-.VoteContent::-webkit-scrollbar {
+/* .VoteContent::-webkit-scrollbar {
   display: none;
-}
+} */
 .VoteItem {
   margin: 10px 10px;
   height: 80px;
@@ -176,15 +276,15 @@ body {
   font-size: 12px;
   font-weight: bold;
   text-align: left;
-  width:190px;
+  width: 190px;
 }
 .ItemClass {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 35px;
-  width: 50px;
+  height: 40px;
+  width: 60px;
   border-radius: 10px;
   background: #a9e0ff;
 }
@@ -210,19 +310,8 @@ body {
   justify-content: space-between;
   align-items: center;
 }
-.CurrentRank{
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  width:100px;
-  height:25px;
-  line-height: 25px;
-  background: white;
-  color:#2e89dc;
-  font-size: 12px;
-  margin-top: 5px;
-  border-radius: 8px;
-}
+.VoteFirst,
+.VoteSecond,
 .VoteThird,
 .VoteDisagree {
   height: 25px;
@@ -235,17 +324,16 @@ body {
   margin-top: 5px;
   border-radius: 8px;
   display: flex;
-  justify-content: center;
   align-items: center;
 }
-.VoteSubmit{
-  height:50px;
+.VoteSubmit {
+  height: 50px;
   line-height: 50px;
   text-align: center;
-  margin:10px 20px;
-  background:#FFDD3E;
-  color:#314C6C;
-  font-size:20px;
+  margin: 10px 20px;
+  background: #ffdd3e;
+  color: #314c6c;
+  font-size: 20px;
   border-radius: 15px;
 }
 img {

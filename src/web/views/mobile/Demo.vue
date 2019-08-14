@@ -150,7 +150,7 @@ body {
 }
 .VoterTitle,
 .VoterName {
-  /* margin: 5px 5px; */
+  margin: 0 5px;
   font-size: 14px;
   color: #2e89dc;
 }
