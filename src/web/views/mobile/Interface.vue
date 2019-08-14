@@ -1,6 +1,7 @@
 <template lang="pug">
   .app
     .result {{result}}
+    .btn(@click="openModal") openModal
     .btn(@click="getProjects") getProjects
     .btn(@click="getUser") getUser
     .btn(@click="getRound") getRound
@@ -8,19 +9,28 @@
     .btn(@click="votingRound1") votingRound1
     .btn(@click="votingRound2") votingRound2
     .btn(@click="getRound1Result") getRound1Result
+    Modal(:show.sync="show")
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import Modal from '@/components/Modal.vue'
 
 export default Vue.extend({
   name: 'home',
+  components: {
+    Modal
+  },
   data() {
     return {
+      show: false,
       result: ''
     }
   },
   methods: {
+    openModal() {
+      this.show = true
+    },
     async getProjects() {
       // console.log('test get')
       // a.b.c
