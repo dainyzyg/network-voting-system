@@ -8,9 +8,14 @@ import { AxiosError } from 'axios'
 Vue.config.productionTip = false
 
 Vue.config.errorHandler = (err: AxiosError, vm, info) => {
-  console.log(err.response)
+  console.log('Vue.config.errorHandler')
+  console.dir(err)
   if (err.response) {
-    alert(err.response.data.message)
+    alert(err.response.data.message || err.response.data)
+    return
+  }
+  if (err.message) {
+    alert(err.message)
   }
 }
 
