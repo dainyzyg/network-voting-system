@@ -45,7 +45,7 @@
               img(:src="Item.score===0?DisLikeRed:DisLike")
               .VoteDisagreeTitle 不入选
       .VoteSubmit(@click="judgeData") 提交投票
-    VoteRound1Confirm(:show.sync='show' :projects='projects')
+    VoteRound1Confirm(@confirm="votingRound1" :show.sync='show' :projects='projects')
 </template>
 
 <script>
@@ -135,6 +135,14 @@ export default {
         }
       }
       return false
+    },
+    async votingRound1() {
+      let data = {
+        votingUserID: this.userInfo.id,
+        votingResult: this.projects
+      }
+      let r = await this.$axios.post('votingRound1', data)
+      console.log(r)
     }
   },
   computed: {

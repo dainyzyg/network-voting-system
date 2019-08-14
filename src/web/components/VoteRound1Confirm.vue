@@ -4,20 +4,20 @@ Modal(:show='show')
     .ConfirmTitle 投票结果确认
     .VoteRank
       .RankFirstTitle 一等奖
-      .RankFirstTable(v-for="Item in firstProjects" :key="Item.id")
-        .FirstName {{Item.name}}
+      .RankFirstTable(v-for="first in firstProjects")
+        .FirstName {{first.name}}
       .RankSecondTitle 二等奖
-      .RankSecondTable(v-for="Item in firstProjects" :key="Item.id")
-        .SecondName {{Item.ItemTitle}}
+      .RankSecondTable(v-for="second in secondProjects")
+        .SecondName {{second.name}}
       .RankThirdTitle 三等奖
-      .RankThirdTable(v-for="Item in firstProjects" :key="Item.id")
-        .ThirdName {{Item.ItemTitle}}
+      .RankThirdTable(v-for="third in thirdProjects")
+        .ThirdName {{third.name}}
       .DisLikeTitle 不入选
-      .DisLikeTable(v-for="Item in firstProjects" :key="Item.id")
-        .DisLikeName {{Item.ItemTitle}}
-      .ConfirmSubmit
-        .Confirm 确认
-        .Cancel(@click='close') 取消
+      .DisLikeTable(v-for="dislike in dislikeProjects")
+        .DisLikeName {{dislike.name}}
+    .ConfirmSubmit
+      .Confirm(@click='votingRound1') 确认
+      .Cancel(@click='close') 取消  
 </template>
 
 <script>
@@ -37,6 +37,9 @@ export default {
     close() {
       console.log('close')
       this.$emit('update:show', false)
+    },
+    votingRound1() {
+      this.$emit('confirm')
     }
   },
   computed: {
@@ -45,11 +48,29 @@ export default {
         return this.projects.filter(i => i.score === 5)
       }
       return []
+    },
+    secondProjects() {
+      if (this.projects && this.projects.length > 0) {
+        return this.projects.filter(i => i.score === 3)
+      }
+      return []
+    },
+    thirdProjects() {
+      if (this.projects && this.projects.length > 0) {
+        return this.projects.filter(i => i.score === 2)
+      }
+      return []
+    },
+    dislikeProjects() {
+      if (this.projects && this.projects.length > 0) {
+        return this.projects.filter(i => i.score === 0)
+      }
+      return []
     }
   }
 }
 </script>
-<style>
+<style scoped>
 .VoteConfirm {
   display: flex;
   flex-direction: column;
@@ -57,8 +78,6 @@ export default {
   margin: 20px;
   border: solid 2px #a9e0ff;
   border-radius: 10px;
-  height: 520px;
-  width: 280px;
   overflow: hidden;
 }
 .ConfirmTitle {
@@ -74,6 +93,8 @@ export default {
 }
 .VoteRank {
   overflow: scroll;
+  padding: 5px 0;
+  width:90%
 }
 .VoteRank::-webkit-scrollbar {
   display: none;
@@ -83,7 +104,7 @@ export default {
 .RankThirdTitle,
 .DisLikeTitle {
   height: 20px;
-  width: 240px;
+  width: 100%;
   color: #2e89dc;
   line-height: 20px;
   text-align: center;
@@ -95,11 +116,11 @@ export default {
 .RankSecondTable,
 .RankThirdTable,
 .DisLikeTable {
+  height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 50px;
-  width: 240px;
+  width: 100%;
   color: #2e89dc;
   font-size: 12px;
   margin-top: 5px;
@@ -110,13 +131,14 @@ export default {
 .SecondName,
 .ThirdName,
 .DisLikeName {
-  width: 230px;
+  width: 90%;
 }
 .ConfirmSubmit {
   display: flex;
-  justify-content: space-between;
+  width: 100%;
+  justify-content: space-around;
   align-items: center;
-  margin: 10px 5px;
+  margin: 20px 0;
 }
 .Confirm,
 .Cancel {
