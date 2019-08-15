@@ -4,28 +4,38 @@
     .btn(@click="setRound(1)") 设置当前为第一轮投票
     .btn(@click="setRound(2)") 设置当前为第二轮投票
     .btn(@click="getRound1User") 查看第一轮投票人数
-    .btn(@click="openModal") 查看第一轮投票结果
+    .btn(@click="getRound1Result") 查看第一轮投票结果
     .btn(@click="getRound2User") 查看第二轮投票人数
-    .btn(@click="openModal") 查看第二轮投票结果
-    .btn(@click="reset") 重置投票数据
+    .btn(@click="getRound2Result") 查看第二轮投票结果
+    //- .btn(@click="reset") 重置投票数据
     VoteRound1User(@refesh="getRoundUser" :show.sync="showRound1User" :Round1User="Round1User")
+    VoteResult(:show.sync="showRoundResult" :RoundResult="RoundResult")
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
+<script>
 import VoteRound1User from '@/components/VoteRound1User.vue'
+import VoteResult from '@/components/VoteResult.vue'
 
-export default Vue.extend({
+export default {
   name: 'home',
   components: {
-    VoteRound1User
+    VoteRound1User,
+    VoteResult
   },
   data() {
     return {
       round: 1,
       showRound1User: false,
+      showRoundResult: false,
       result: '',
-      Round1User: []
+      Round1User: [],
+      RoundResult: {
+        first: [],
+        second: [],
+        third: [],
+        noPlace: [],
+        votingCount: 0
+      }
     }
   },
   methods: {
@@ -68,9 +78,54 @@ export default Vue.extend({
       } else {
         this.result = `重置失败！`
       }
+    },
+    async getRound1Result() {
+      let r = await this.$axios.get('getRound')
+      if (r.data != 2) {
+        this.result =
+          '请在第一轮投票全部完成后，将当前投票轮次设置成第二轮，然后再查看第一轮投票结果！'
+        return
+      }
+      let r2 = await this.$axios.get('getRound1Result')
+      let list = r2.data
+      const firstCount = 9
+      const secondCount = 19
+      const thirdCount = 28
+      this.RoundResult = {
+        first: [],
+        second: [],
+        third: [],
+        noPlace: [],
+        votingCount: 0
+      }
+      this.showRoundResult = true
+      for (let i = 0; i < firstCount; i++) {
+        let project = list[i]
+        this.RoundResult.first.push(project)
+      }
+      for (let i = firstCount; i < firstCount + secondCount; i++) {
+        let project = list[i]
+        this.RoundResult.second.push(project)
+      }
+      for (let i = firstCount + secondCount; i < firstCount + secondCount + thirdCount; i++) {
+        let project = list[i]
+        this.RoundResult.third.push(project)
+      }
+    },
+    async getRound2Result() {
+      this.RoundResult = {
+        first: [],
+        second: [],
+        third: [],
+        noPlace: [],
+        votingCount: 0
+      }
+      this.showRoundResult = true
+      let r2 = await this.$axios.get('getRound2Result')
+      this.RoundResult = r2.data
     }
   }
-})
+}
 </script>
 <style scoped>
 .result {

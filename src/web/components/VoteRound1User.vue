@@ -58,7 +58,8 @@ export default {
   -webkit-overflow-scrolling: touch;
 }
 .btn-wrapper {
-  flex: 0 0 50px;
+  margin: 0 10px;
+  flex: 0 0 80px;
   overflow: hidden;
   display: flex;
   /* justify-content: space-between; */
