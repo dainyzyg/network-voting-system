@@ -75,7 +75,7 @@ export default {
       await this.getProjects()
     } else if (i == 2) {
       let userID = this.getQueryVariable('id')
-      this.$router.push('/SecondRoundVote?id='+userID)
+      this.$router.push('/SecondRoundVote?id=' + userID)
       return
     }
   },
@@ -124,6 +124,7 @@ export default {
       this.$set(Item, 'score', score)
     },
     judgeData() {
+      // this.show = true
       for (let i in this.projects) {
         let item = this.projects[i]
         if (item.score === undefined) {
@@ -145,13 +146,16 @@ export default {
       return false
     },
     async votingRound1() {
-      this.IfSucess = true
-      return
       let data = {
         votingUserID: this.userInfo.id,
         votingResult: this.projects
       }
       let r = await this.$axios.post('votingRound1', data)
+      if (r.data.success) {
+        this.IfSucess = true
+      } else {
+        alert('投票失败!')
+      }
     }
   },
   computed: {

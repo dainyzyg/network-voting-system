@@ -98,18 +98,22 @@ export default {
       this.Round1Result = r.data
     },
     async votingRound2() {
-      this.IfSucess = true
-      return
       let data = {
         votingUserID: this.userInfo.id,
         votingResult: this.Round1Result
       }
       let r = await this.$axios.post('votingRound2', data)
+      if (r.data.success) {
+        this.IfSucess = true
+      } else {
+        alert('投票失败!')
+      }
     },
     Vote(Item, trust) {
       this.$set(Item, 'trust', trust)
     },
     judgeData() {
+      // this.show = true
       for (let i in this.Round1Result) {
         let sr = this.Round1Result[i]
         if (sr.trust === undefined) {
