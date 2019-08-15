@@ -17,9 +17,9 @@
               .ClassTitle 类别
               .ClassName {{Item.group}}
           .ItemVote
-            .CurrentRank
+            .CurrentRank(:style="{color:getcolor(index),border:getborder(index)}") 
               .CurrentTitle 推荐评级
-              .CurrentRankName {{Item.scoreTotal}}
+              .CurrentRankName {{getRankGrade(index)}}
             .VoteThird(@click="Vote(Item,true)") 
               img(:src="Item.trust===true?LikeBlue:LikeGray")
               .VoteThirdTitle 同意
@@ -27,12 +27,20 @@
               img(:src="Item.trust===false?DisLikeRed:DisLike")
               .VoteDisagreeTitle 不同意
       .VoteSubmit(@click="judgeData") 提交投票
+    VoteRound2Confirm(@confirm="votingRound2" :show.sync='show' :Round1Result='Round1Result' :IfSucess='IfSucess')
 </template>
 
 <script>
+import VoteRound2Confirm from '@/components/VoteRound2Confirm.vue'
+
 export default {
+  components: {
+    VoteRound2Confirm
+  },
   data() {
     return {
+      IfSucess: false,
+      show: false,
       userInfo: {},
       Round1Result: [],
       LikeGray: './LikeGray.png',
@@ -44,9 +52,35 @@ export default {
   async created() {
     await this.getUser()
     await this.getRound1Result()
-    await this.votingRound2()
   },
   methods: {
+    getRankGrade(index) {
+      if (index <= 8) {
+        return '一等奖'
+      } else if (index >= 9 && index <= 27) {
+        return '二等奖'
+      } else if (index >= 28 && index <= 55) {
+        return '三等奖'
+      }
+    },
+    getcolor(index) {
+      if (index <= 8) {
+        return '#f5222d'
+      } else if (index >= 9 && index <= 27) {
+        return '#faad14'
+      } else if (index >= 28 && index <= 55) {
+        return '#52c41a'
+      }
+    },
+    getborder(index) {
+      if (index <= 8) {
+        return '1px solid #ffa39e'
+      } else if (index >= 9 && index <= 27) {
+        return '1px solid #ffe58f'
+      } else if (index >= 28 && index <= 55) {
+        return '1px solid #b7eb8f'
+      }
+    },
     async getUser() {
       let userID = this.getQueryVariable('id')
       let r = await this.$axios.get('getUser', {
@@ -54,36 +88,28 @@ export default {
           userID: userID
         }
       })
-      console.log(r)
       if (!r.data) {
         throw new Error('无效的用户名！')
       }
       this.userInfo = r.data
     },
-    // async getProjects() {
-    //   let r = await this.$axios.get('getProjects')
-    //   console.log(r.data)
-    //   this.projects = r.data
-    // },
     async getRound1Result() {
       let r = await this.$axios.get('getRound1Result')
-      console.log(r)
       this.Round1Result = r.data
     },
     async votingRound2() {
+      this.IfSucess = true
+      return
       let data = {
         votingUserID: this.userInfo.id,
         votingResult: this.Round1Result
       }
       let r = await this.$axios.post('votingRound2', data)
-      console.log(r)
     },
     Vote(Item, trust) {
       this.$set(Item, 'trust', trust)
-      console.log(Item)
     },
     judgeData() {
-      // this.$router.push('/SecondRoundVote?id=123132')
       for (let i in this.Round1Result) {
         let sr = this.Round1Result[i]
         if (sr.trust === undefined) {
@@ -91,7 +117,7 @@ export default {
           return
         }
       }
-      this.votingRound2()
+      this.show = true
     },
     getQueryVariable(variable) {
       var query = window.location.href.split('?')[1]

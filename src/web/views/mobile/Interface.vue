@@ -63,7 +63,7 @@ export default Vue.extend({
       this.result = r.data
     },
     async setRound() {
-      let r = await this.$axios.post('setRound', { round: 2 })
+      let r = await this.$axios.post('setRound', { round: 1 })
       this.result = r.data
     },
     async votingRound1() {
