@@ -22,19 +22,15 @@ export default new Router({
       component: () => import(/* webpackChunkName: "interface" */ './views/mobile/Interface.vue')
     },
     {
-      path: '/VoteConfirm',
-      name: 'VoteConfirm',
-      component: () => import(/* webpackChunkName: "interface" */ './views/mobile/VoteConfirm.vue')
-    },
-    {
       path: '/Management',
       name: 'Management',
-      component: () => import(/* webpackChunkName: "interface" */ './views/mobile/Management.vue')
+      component: () => import(/* webpackChunkName: "Management" */ './views/mobile/Management.vue')
     },
     {
       path: '/SecondRoundVote',
       name: 'SecondRoundVote',
-      component: () => import(/* webpackChunkName: "interface" */ './views/mobile/SecondRoundVote.vue')
+      component: () =>
+        import(/* webpackChunkName: "SecondRoundVote" */ './views/mobile/SecondRoundVote.vue')
     }
   ]
 })
