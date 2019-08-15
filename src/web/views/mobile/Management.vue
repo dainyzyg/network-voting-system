@@ -7,7 +7,7 @@
     .btn(@click="openModal") 查看第一轮投票结果
     .btn(@click="getRound2User") 查看第二轮投票人数
     .btn(@click="openModal") 查看第二轮投票结果
-    .btn(@click="openModal") 重置投票数据
+    .btn(@click="reset") 重置投票数据
     VoteRound1User(@refesh="getRoundUser" :show.sync="showRound1User" :Round1User="Round1User")
 </template>
 
@@ -59,6 +59,14 @@ export default Vue.extend({
         console.log('getRound2User')
         let r = await this.$axios.get('getRound2User')
         this.Round1User = r.data
+      }
+    },
+    async reset() {
+      let r = await this.$axios.post('reset')
+      if (r.data.success) {
+        this.result = `重置成功！`
+      } else {
+        this.result = `重置失败！`
       }
     }
   }
