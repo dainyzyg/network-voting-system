@@ -1,13 +1,17 @@
 <template lang="pug">
 Modal(:show='show')
   .content
-    .tit 未投票人员({{todo.count}})：
-    .voter {{todo.text}}
-    .tit 已投票人员({{done.count}})：
-    .voter {{done.text}}
+    .tit 一等奖({{RoundResult.first.length}})：
+    .voter(v-for="i in RoundResult.first") {{i.name}}
+    .tit 二等奖({{RoundResult.second.length}})：
+    .voter(v-for="i in RoundResult.second") {{i.name}}
+    .tit 三等奖({{RoundResult.third.length}})：
+    .voter(v-for="i in RoundResult.third") {{i.name}}
+    .tit(v-if="RoundResult.noPlace.length>0") 未得奖({{RoundResult.noPlace.length}})：
+    .voter(v-for="i in RoundResult.noPlace") {{i.name}}
   .btn-wrapper
    .btn(@click="close") 关闭
-   .btn(@click="refesh") 刷新
+  //-  .btn(@click="refesh") 刷新
 </template>
 
 <script>
@@ -19,7 +23,7 @@ export default {
   components: {
     Modal
   },
-  props: ['show', 'Round1User'],
+  props: ['show', 'RoundResult'],
   data() {
     return {}
   },
@@ -84,5 +88,13 @@ export default {
   margin-top: 20px;
   color: #2e89dc;
   font-weight: bold;
+}
+.voter {
+  font-size: 14px;
+  color: #2e89dc;
+  background: #a9e0ff;
+  border-radius: 10px;
+  padding: 5px;
+  margin: 5px;
 }
 </style>

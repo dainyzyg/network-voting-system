@@ -9,6 +9,7 @@
     .btn(@click="votingRound1") votingRound1
     .btn(@click="votingRound2") votingRound2
     .btn(@click="getRound1Result") getRound1Result
+    .btn(@click="reset") 重置投票数据
     Modal(:show.sync="show")
 </template>
 
@@ -28,6 +29,14 @@ export default Vue.extend({
     }
   },
   methods: {
+    async reset() {
+      let r = await this.$axios.post('reset')
+      if (r.data.success) {
+        this.result = `重置成功！`
+      } else {
+        this.result = `重置失败！`
+      }
+    },
     openModal() {
       this.show = true
     },
