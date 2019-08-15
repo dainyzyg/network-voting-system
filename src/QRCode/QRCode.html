@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>二维码</title>
+    <style>
+      * {
+        font-family: 'PingFang SC', 'Microsoft YaHei' !important;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      }
+      @page {
+        size: A4;
+        margin: 2vw 1vw;
+        padding: 0vw;
+      }
+      .app {
+        padding-top: 200px;
+        box-sizing: border-box;
+        page-break-after: always;
+        /* background: skyblue; */
+        /* height: 891px; */
+        height: 1178px;
+        width: 840px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .qrcode {
+        margin-top: 50px;
+        width: 250px;
+        height: 250px;
+        background: skyblue;
+      }
+      .title {
+        font-size: 30px;
+        height: 60px;
+        font-weight: bold;
+      }
+      .url {
+        padding-top: 30px;
+        font-size: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>
+      <strong
+        >We're sorry but voting doesn't work properly without JavaScript enabled. Please enable it
+        to continue.
+      </strong>
+    </noscript>
+  </body>
+</html>
+<script src="QRCode.js"></script>
+<script>
+  let users = [
+    { id: 1565595661250900, name: '李家民' },
+    { id: 1565745249824300, name: '贾鸿武' },
+    { id: 1565745271589799, name: '陈朝晖' },
+    { id: 1565745288387699, name: '郭健' },
+    { id: 1565745304796499, name: '王世宏' },
+    { id: 1565745317121599, name: '王晓路' },
+    { id: 1565745326326500, name: '宋健强' },
+    { id: 1565745334908500, name: '张秋怡' },
+    { id: 1565745345083600, name: '王乐福' },
+    { id: 1565745353252099, name: '李延勇' },
+    { id: 1565745367708200, name: '卢建国' },
+    { id: 1565745377159199, name: '王福善' },
+    { id: 1565745386952600, name: '李成贵' },
+    { id: 1565745403661299, name: '秦松' },
+    { id: 1565745415503399, name: '马建华' },
+    { id: 1565745426855199, name: '陈勃' },
+    { id: 1565745436045599, name: '田宪忠' },
+    { id: 1565745444673299, name: '徐文学' },
+    { id: 1565745454500399, name: '谢恒' },
+    { id: 1565745463848400, name: '瞿宾业' },
+    { id: 1565745471931700, name: '陈永生' },
+    { id: 1565745481024200, name: '姚殳' },
+    { id: 1565745491083099, name: '剡军' },
+    { id: 1565745499870099, name: '苏贵章' },
+    { id: 1565745507402099, name: '刘光武' },
+    { id: 1565745517973099, name: '刘兴旺' },
+    { id: 1565745526327400, name: '周斌' },
+    { id: 1565745535443000, name: '刘辉' },
+    { id: 1565745544241000, name: '张盛彬' }
+  ]
+  let innerHTML = ''
+  let baseURL = 'http://localhost:8081/mobile.html#/?id='
+  users.forEach(e => {
+    innerHTML += `<div class="app">
+      <div class="title">兰州石化公司</div>
+      <div class="title">2018年度科学技术奖投票活动</div>
+      <div class="title">投票人：${e.name}</div>
+      <div class="qrcode" id=${e.id}></div>
+      <div class="url">${baseURL + e.id}</div>
+    </div>`
+  })
+  document.body.innerHTML = innerHTML
+  users.forEach(e => {
+    new QRCode(document.getElementById(e.id), {
+      text: baseURL + e.id,
+      width: 250,
+      height: 250
+      // colorDark: '#000000',
+      // colorLight: '#ffffff',
+      // correctLevel: QRCode.CorrectLevel.H
+    })
+  })
+</script>
