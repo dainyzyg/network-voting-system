@@ -44,7 +44,7 @@
               img(:src="Item.score===0?DisLikeRed:DisLike")
               .VoteDisagreeTitle 不入选
       .VoteSubmit(@click="judgeData") 提交投票
-    VoteRound1Confirm(@confirm="votingRound1" :show.sync='show' :projects='projects')
+    VoteRound1Confirm(@confirm="votingRound1" :show.sync='show' :projects='projects' :IfSucess='IfSucess')
 </template>
 
 <script>
@@ -56,6 +56,7 @@ export default {
   },
   data() {
     return {
+      IfSucess: false,
       show: false,
       userInfo: {},
       projects: [],
@@ -67,7 +68,16 @@ export default {
   },
   async created() {
     await this.getUser()
-    await this.getProjects()
+    // console.log(this.getRound())
+    let i = await this.getRound()
+    console.log(i)
+    if (i == 1) {
+      await this.getProjects()
+    } else if (i == 2) {
+      let userID = this.getQueryVariable('id')
+      this.$router.push('/SecondRoundVote?id='+userID)
+      return
+    }
   },
   methods: {
     async getUser() {
@@ -77,15 +87,17 @@ export default {
           userID: userID
         }
       })
-      console.log(r)
       if (!r.data) {
         throw new Error('无效的用户名！')
       }
       this.userInfo = r.data
     },
+    async getRound() {
+      let r = await this.$axios.get('getRound')
+      return r.data
+    },
     async getProjects() {
       let r = await this.$axios.get('getProjects')
-      console.log(r.data)
       this.projects = r.data
     },
     Vote(Item, score) {
@@ -112,9 +124,6 @@ export default {
       this.$set(Item, 'score', score)
     },
     judgeData() {
-      // this.show = true
-      // return
-      // this.$router.push('/SecondRoundVote?id=123132')
       for (let i in this.projects) {
         let item = this.projects[i]
         if (item.score === undefined) {
@@ -123,7 +132,6 @@ export default {
         }
       }
       this.show = true
-      // alert('success')
     },
     getQueryVariable(variable) {
       var query = window.location.href.split('?')[1]
@@ -137,13 +145,13 @@ export default {
       return false
     },
     async votingRound1() {
+      this.IfSucess = true
+      return
       let data = {
         votingUserID: this.userInfo.id,
         votingResult: this.projects
       }
       let r = await this.$axios.post('votingRound1', data)
-      // console.log(r)
-      // alert('您的第一轮投票结束，谢谢参与！')
     }
   },
   computed: {
