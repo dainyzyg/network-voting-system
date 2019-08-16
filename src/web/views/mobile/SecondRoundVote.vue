@@ -27,7 +27,7 @@
               img(:src="Item.trust===false?DisLikeRed:DisLike")
               .VoteDisagreeTitle 不同意
       .VoteSubmit(@click="judgeData") 提交投票
-    VoteRound2Confirm(@confirm="votingRound2" :show.sync='show' :Round1Result='Round1Result' :IfSucess='IfSucess')
+    VoteRound2Confirm(@confirm="votingRound2" :show.sync='show' :Round1Result='Round1Result' :IfSucess='IfSucess' :isVoting="isVoting")
 </template>
 
 <script>
@@ -39,6 +39,7 @@ export default {
   },
   data() {
     return {
+      isVoting: false,
       IfSucess: false,
       show: false,
       userInfo: {},
@@ -98,11 +99,13 @@ export default {
       this.Round1Result = r.data
     },
     async votingRound2() {
+      this.isVoting = true
       let data = {
         votingUserID: this.userInfo.id,
         votingResult: this.Round1Result
       }
       let r = await this.$axios.post('votingRound2', data)
+      this.isVoting = false
       if (r.data.success) {
         this.IfSucess = true
       } else {
