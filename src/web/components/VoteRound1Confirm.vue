@@ -2,7 +2,7 @@
 Modal(:show='show')
   .VoteConfirm
     template(v-if="!IfSucess")
-      .ConfirmTitle 投票结果确认
+      .ConfirmTitle 请确认投票结果
       .VoteRank
         .RankFirstTitle 一等奖
         .RankFirstTable(v-for="first in firstProjects")
@@ -17,7 +17,7 @@ Modal(:show='show')
         .DisLikeTable(v-for="dislike in dislikeProjects")
           .DisLikeName {{dislike.name}}
       .ConfirmSubmit
-        .Confirm(@click='votingRound1') 确认
+        .Confirm(@click='votingRound1') {{isVoting?'正在提交...':'确认提交'}}
         .Cancel(@click='close') 取消
     template(v-else)
       .Round1EndTitle 投票结束
@@ -38,7 +38,7 @@ export default {
   components: {
     Modal
   },
-  props: ['show', 'projects', 'IfSucess'],
+  props: ['show', 'projects', 'IfSucess', 'isVoting'],
   data() {
     return {}
   },
@@ -56,11 +56,10 @@ export default {
     },
     async OpenRound2() {
       let i = await this.getRound()
-      if(i==1) {
+      if (i == 1) {
         alert('第二轮投票尚未开始')
         return
-      }
-      else if(i==2){
+      } else if (i == 2) {
         let userID = this.getQueryVariable('id')
         this.$router.push('/SecondRoundVote?id=' + userID)
       }
@@ -213,7 +212,7 @@ export default {
 .Confirm,
 .Cancel {
   height: 40px;
-  width: 100px;
+  width: 120px;
   font-size: 20px;
   border-radius: 10px;
   display: flex;
