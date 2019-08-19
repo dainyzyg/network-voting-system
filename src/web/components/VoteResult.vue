@@ -2,7 +2,7 @@
 Modal(:show='show')
   .NetWorkVoting
     .VoteHeader
-      .VoteTitle1 第一轮投票结果
+      .VoteTitle1 {{round==1?'第一轮投票结果':'第二轮投票结果'}}
       .VoteTitle2 投票人数:{{RoundResult.votingCount}} 
     .VoteContent
       .VoteItem(v-for="Item,index in RoundResult.first" :key="Item.id")
@@ -23,7 +23,7 @@ Modal(:show='show')
               .CurrentRankFirst1
                 .TechScoreTitle 技术分:
                 .TechVoteScore {{Item.techScore}}
-              .CurrentRankFirst1(v-if="getTrustCount(Item)")
+              .CurrentRankFirstGreen(v-if="getTrustCount(Item)" :class="{ CurrentRankFirstRed: getTrustColor(Item) }")
                 .TechScoreTitle 信任票:
                 .TechVoteScore {{Item.trustCount}}
       .VoteItem(v-for="Item,index in RoundResult.second" :key="Item.id")
@@ -44,7 +44,7 @@ Modal(:show='show')
               .CurrentRankSecond1
                 .TechScoreTitle 技术分:
                 .TechVoteScore {{Item.techScore}}
-              .CurrentRankSecond1(v-if="getTrustCount(Item)")
+              .CurrentRankFirstGreen(v-if="getTrustCount(Item)" :class="{ CurrentRankFirstRed: getTrustColor(Item) }")
                 .TechScoreTitle 信任票:
                 .TechVoteScore {{Item.trustCount}}
       .VoteItem(v-for="Item,index in RoundResult.third" :key="Item.id")
@@ -65,7 +65,7 @@ Modal(:show='show')
               .CurrentRankThird1
                 .TechScoreTitle 技术分:
                 .TechVoteScore {{Item.techScore}}
-              .CurrentRankThird1(v-if="getTrustCount(Item)")
+              .CurrentRankFirstGreen(v-if="getTrustCount(Item)" :class="{ CurrentRankFirstRed: getTrustColor(Item) }")
                 .TechScoreTitle 信任票:
                 .TechVoteScore {{Item.trustCount}}
       .VoteItem(v-for="Item,index in RoundResult.noPlace" :key="Item.id")
@@ -86,7 +86,7 @@ Modal(:show='show')
               .CurrentRankNoplace1
                 .TechScoreTitle 技术分:
                 .TechVoteScore {{Item.techScore}}
-              .CurrentRankNoplace1(v-if="getTrustCount(Item)")
+              .CurrentRankFirstGreen(v-if="getTrustCount(Item)" :class="{ CurrentRankFirstRed: getTrustColor(Item) }")
                 .TechScoreTitle 信任票:
                 .TechVoteScore {{Item.trustCount}}
   //- .content
@@ -112,24 +112,24 @@ export default {
   components: {
     Modal
   },
-  props: ['show', 'RoundResult'],
+  props: ['show', 'RoundResult', 'round'],
   data() {
     return {
       Round1Result: []
     }
   },
-  async created() {
-    await this.getRound1Result()
-  },
   methods: {
-    async getRound1Result() {
-      let r = await this.$axios.get('getRound1Result')
-      this.Round1Result = r.data
-    },
     getTrustCount(item) {
       if (item.trustCount != undefined) {
         return true
       } else return false
+    },
+    getTrustColor(item) {
+      if (item.trustCount / this.RoundResult.votingCount < 2 / 3) {
+        return true
+      } else {
+        return false
+      }
     },
     close() {
       this.$emit('update:show', false)
@@ -277,7 +277,9 @@ export default {
 .CurrentRankFirst1,
 .CurrentRankSecond1,
 .CurrentRankThird1,
-.CurrentRankNoplace1 {
+.CurrentRankNoplace1,
+.CurrentRankFirstGreen,
+.CurrentRankFirstRed {
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -298,6 +300,7 @@ export default {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  flex: 1;
 }
 .CurrentRankFirst1,
 .CurrentRankSecond1,
@@ -306,6 +309,16 @@ export default {
   color: #2e89dc;
   background: #a9e0ff;
   margin: 0 1px;
+}
+.CurrentRankFirstGreen {
+  background-color: #f0f9eb;
+  color: #67c23a;
+  margin-left:2px;
+}
+.CurrentRankFirstRed {
+  background-color: #fef0f0;
+  color: #f56c6c;
+  margin-left:2px;
 }
 .CurrentRankSecond {
   color: #faad14;

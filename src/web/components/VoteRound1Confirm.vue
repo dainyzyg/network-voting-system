@@ -57,7 +57,11 @@ export default {
     async OpenRound2() {
       let i = await this.getRound()
       if (i == 1) {
-        alert('第二轮投票尚未开始')
+        this.$alert.show({
+          title: '提示',
+          content: '第二轮投票尚未开始'
+        })
+        // alert('第二轮投票尚未开始')
         return
       } else if (i == 2) {
         let userID = this.getQueryVariable('id')

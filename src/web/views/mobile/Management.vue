@@ -9,7 +9,7 @@
     .btn(@click="getRound2Result") 查看第二轮投票结果
     //- .btn(@click="reset") 重置投票数据
     VoteRound1User(@refesh="getRoundUser" :show.sync="showRound1User" :Round1User="Round1User")
-    VoteResult(:show.sync="showRoundResult" :RoundResult="RoundResult")
+    VoteResult(:show.sync="showRoundResult" :RoundResult="RoundResult" :round="round")
 </template>
 
 <script>
@@ -80,6 +80,7 @@ export default {
       }
     },
     async getRound1Result() {
+      this.round = 1
       let r = await this.$axios.get('getRound')
       if (r.data != 2) {
         this.result =
@@ -114,6 +115,7 @@ export default {
       // this.RoundResult.votingCount = r2.data.votingCount
     },
     async getRound2Result() {
+      this.round = 2
       this.RoundResult = {
         first: [],
         second: [],
