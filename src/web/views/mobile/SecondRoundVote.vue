@@ -95,7 +95,12 @@ export default {
       this.userInfo = r.data
     },
     async getRound1Result() {
-      let r = await this.$axios.get('getRound1Result')
+      let userID = this.getQueryVariable('id')
+      let r = await this.$axios.get('getRound1Result', {
+        params: {
+          userID: userID
+        }
+      })
       this.Round1Result = r.data
     },
     async votingRound2() {
@@ -124,9 +129,9 @@ export default {
         let sr = this.Round1Result[i]
         if (sr.trust === undefined) {
           this.$alert.show({
-              title: '提示',
-              content: `有未投票的项目：${parseInt(i) + 1}.${sr.name}`
-            })
+            title: '提示',
+            content: `有未投票的项目：${parseInt(i) + 1}.${sr.name}`
+          })
           // alert(`有未投票的项目：${parseInt(i) + 1}.${sr.name}`)
           return
         }
