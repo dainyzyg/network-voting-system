@@ -20,12 +20,13 @@
             .CurrentRank(:style="{color:getcolor(index),border:getborder(index)}") 
               .CurrentTitle 推荐评级
               .CurrentRankName {{getRankGrade(index)}}
-            .VoteThird(@click="Vote(Item,true)") 
-              img(:src="Item.trust===true?LikeBlue:LikeGray")
-              .VoteThirdTitle 同意
-            .VoteDisagree(@click="Vote(Item,false)") 
-              img(:src="Item.trust===false?DisLikeRed:DisLike")
-              .VoteDisagreeTitle 不同意
+            .VoteThird_VoteDisagree
+              .VoteThird(@click="Vote(Item,true)") 
+                img(:src="Item.trust===true?LikeBlue:LikeGray")
+                .VoteThirdTitle 同意
+              .VoteDisagree(@click="Vote(Item,false)") 
+                img(:src="Item.trust===false?DisLikeRed:DisLike")
+                .VoteDisagreeTitle 不同意
       .VoteSubmit(@click="judgeData") 提交投票
     VoteRound2Confirm(@confirm="votingRound2" :show.sync='show' :Round1Result='Round1Result' :IfSucess='IfSucess' :isVoting="isVoting")
 </template>
@@ -203,6 +204,11 @@ export default {
   font-size: 12px;
   border-radius: 8px;
 }
+.VoteThird_VoteDisagree{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
 .VoteThird,
 .VoteDisagree {
   height: 25px;
@@ -216,6 +222,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 0 5px;
 }
 .VoteContent {
   width: 100vw;

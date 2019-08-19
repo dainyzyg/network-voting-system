@@ -15,16 +15,17 @@ Modal(:show='show')
               .ClassName {{Item.group}}
           .ItemVote
             .CurrentRankFirst 一等奖
-              .CurrentTitle 
-            .CurrentRankFirst
-              .CurrentScoreTitle 总分:
-              .CurrentVoteScore {{Item.scoreTotal}}
-            .CurrentRankFirst
-              .TechScoreTitle 技术分:
-              .TechVoteScore {{Item.techScore}}
-            .CurrentRankFirst
-              .TechScoreTitle 信任票:
-              .TechVoteScore {{Item.trustCount}}
+              .CurrentTitle
+            .outter 
+              .CurrentRankFirst1
+                .CurrentScoreTitle 总分:
+                .CurrentVoteScore {{Item.scoreTotal}}
+              .CurrentRankFirst1
+                .TechScoreTitle 技术分:
+                .TechVoteScore {{Item.techScore}}
+              .CurrentRankFirst1(v-if="getTrustCount(Item)")
+                .TechScoreTitle 信任票:
+                .TechVoteScore {{Item.trustCount}}
       .VoteItem(v-for="Item,index in RoundResult.second" :key="Item.id")
         .ItemOrder {{index+1}}
         .ItemInfo
@@ -36,15 +37,16 @@ Modal(:show='show')
           .ItemVote
             .CurrentRankSecond
               .CurrentTitle 二等奖
-            .CurrentRankSecond
-              .CurrentScoreTitle 总分:
-              .CurrentVoteScore {{Item.scoreTotal}}
-            .CurrentRankSecond
-              .TechScoreTitle 技术分:
-              .TechVoteScore {{Item.techScore}}
-            .CurrentRankSecond
-              .TechScoreTitle 信任票:
-              .TechVoteScore {{Item.trustCount}}
+            .outter 
+              .CurrentRankSecond1
+                .CurrentScoreTitle 总分:
+                .CurrentVoteScore {{Item.scoreTotal}}
+              .CurrentRankSecond1
+                .TechScoreTitle 技术分:
+                .TechVoteScore {{Item.techScore}}
+              .CurrentRankSecond1(v-if="getTrustCount(Item)")
+                .TechScoreTitle 信任票:
+                .TechVoteScore {{Item.trustCount}}
       .VoteItem(v-for="Item,index in RoundResult.third" :key="Item.id")
         .ItemOrder {{index+1}}
         .ItemInfo
@@ -56,15 +58,16 @@ Modal(:show='show')
           .ItemVote
             .CurrentRankThird
               .CurrentTitle 三等奖
-            .CurrentRankThird
-              .CurrentScoreTitle 总分:
-              .CurrentVoteScore {{Item.scoreTotal}}
-            .CurrentRankThird
-              .TechScoreTitle 技术分:
-              .TechVoteScore {{Item.techScore}}
-            .CurrentRankThird
-              .TechScoreTitle 信任票:
-              .TechVoteScore {{Item.trustCount}}
+            .outter
+              .CurrentRankThird1
+                .CurrentScoreTitle 总分:
+                .CurrentVoteScore {{Item.scoreTotal}}
+              .CurrentRankThird1
+                .TechScoreTitle 技术分:
+                .TechVoteScore {{Item.techScore}}
+              .CurrentRankThird1(v-if="getTrustCount(Item)")
+                .TechScoreTitle 信任票:
+                .TechVoteScore {{Item.trustCount}}
       .VoteItem(v-for="Item,index in RoundResult.noPlace" :key="Item.id")
         .ItemOrder {{index+1}}
         .ItemInfo
@@ -76,15 +79,16 @@ Modal(:show='show')
           .ItemVote
             .CurrentRankNoplace
               .CurrentTitle 不入选
-            .CurrentRankNoplace
-              .CurrentScoreTitle 总分:
-              .CurrentVoteScore {{Item.scoreTotal}}
-            .CurrentRankNoplace
-              .TechScoreTitle 技术分:
-              .TechVoteScore {{Item.techScore}}
-            .CurrentRankNoplace
-              .TechScoreTitle 信任票:
-              .TechVoteScore {{Item.trustCount}}
+            .outter
+              .CurrentRankNoplace1
+                .CurrentScoreTitle 总分:
+                .CurrentVoteScore {{Item.scoreTotal}}
+              .CurrentRankNoplace1
+                .TechScoreTitle 技术分:
+                .TechVoteScore {{Item.techScore}}
+              .CurrentRankNoplace1(v-if="getTrustCount(Item)")
+                .TechScoreTitle 信任票:
+                .TechVoteScore {{Item.trustCount}}
   //- .content
   //-   .tit 一等奖({{RoundResult.first.length}})：
   //-   .voter(v-for="i in RoundResult.first") {{i.name}}
@@ -122,32 +126,10 @@ export default {
       let r = await this.$axios.get('getRound1Result')
       this.Round1Result = r.data
     },
-    getRankGrade(index) {
-      if (index <= 8) {
-        return '一等奖'
-      } else if (index >= 9 && index <= 27) {
-        return '二等奖'
-      } else if (index >= 28 && index <= 55) {
-        return '三等奖'
-      }
-    },
-    getcolor(index) {
-      if (index <= 8) {
-        return '#f5222d'
-      } else if (index >= 9 && index <= 27) {
-        return '#faad14'
-      } else if (index >= 28 && index <= 55) {
-        return '#52c41a'
-      }
-    },
-    getborder(index) {
-      if (index <= 8) {
-        return '1px solid #ffa39e'
-      } else if (index >= 9 && index <= 27) {
-        return '1px solid #ffe58f'
-      } else if (index >= 28 && index <= 55) {
-        return '1px solid #b7eb8f'
-      }
+    getTrustCount(item) {
+      if (item.trustCount != undefined) {
+        return true
+      } else return false
     },
     close() {
       this.$emit('update:show', false)
@@ -200,7 +182,8 @@ export default {
   align-items: center;
   overflow: hidden;
 }
-.VoteTitle1,.VoteTitle2 {
+.VoteTitle1,
+.VoteTitle2 {
   color: #2e89dc;
   font-size: 16px;
   line-height: 24px;
@@ -290,7 +273,11 @@ export default {
 .CurrentRankFirst,
 .CurrentRankSecond,
 .CurrentRankThird,
-.CurrentRankNoplace {
+.CurrentRankNoplace,
+.CurrentRankFirst1,
+.CurrentRankSecond1,
+.CurrentRankThird1,
+.CurrentRankNoplace1 {
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -302,21 +289,38 @@ export default {
   border-radius: 8px;
   padding: 0 5px;
 }
-.CurrentRankFirst{
-  color:#f5222d;
-  border:1px solid #ffa39e
+.CurrentRankFirst {
+  color: #f5222d;
+  border: 1px solid #ffa39e;
+  width: 36px;
 }
-.CurrentRankSecond{
-  color:#faad14;
-  border:1px solid #ffe58f
+.outter {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
-.CurrentRankThird{
-  color:#52c41a;
-  border:1px solid #b7eb8f
+.CurrentRankFirst1,
+.CurrentRankSecond1,
+.CurrentRankThird1,
+.CurrentRankNoplace1 {
+  color: #2e89dc;
+  background: #a9e0ff;
+  margin: 0 1px;
 }
-.CurrentRankNoplace{
-  color:#8c8c8c;
-  border:1px solid #bfbfbf
+.CurrentRankSecond {
+  color: #faad14;
+  border: 1px solid #ffe58f;
+  width: 36px;
+}
+.CurrentRankThird {
+  color: #52c41a;
+  border: 1px solid #b7eb8f;
+  width: 36px;
+}
+.CurrentRankNoplace {
+  color: #8c8c8c;
+  border: 1px solid #bfbfbf;
+  width: 36px;
 }
 .btn-wrapper {
   margin: 0 10px;
