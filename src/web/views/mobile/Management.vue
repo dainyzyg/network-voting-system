@@ -86,8 +86,8 @@ export default {
           '请在第一轮投票全部完成后，将当前投票轮次设置成第二轮，然后再查看第一轮投票结果！'
         return
       }
-      let r2 = await this.$axios.get('getRound1Result')
-      let list = r2.data
+      let r2 = await this.$axios.get('getRound1ResultNew')
+      let list = r2.data.result
       const firstCount = 9
       const secondCount = 19
       const thirdCount = 28
@@ -96,7 +96,7 @@ export default {
         second: [],
         third: [],
         noPlace: [],
-        votingCount: 0
+        votingCount: r2.data.votingCount
       }
       this.showRoundResult = true
       for (let i = 0; i < firstCount; i++) {
@@ -111,6 +111,7 @@ export default {
         let project = list[i]
         this.RoundResult.third.push(project)
       }
+      // this.RoundResult.votingCount = r2.data.votingCount
     },
     async getRound2Result() {
       this.RoundResult = {
