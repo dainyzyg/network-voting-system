@@ -98,7 +98,12 @@ export default {
       return r.data
     },
     async getProjects() {
-      let r = await this.$axios.get('getProjects')
+      let userID = this.getQueryVariable('id')
+      let r = await this.$axios.get('getProjects', {
+        params: {
+          userID: userID
+        }
+      })
       this.projects = r.data
     },
     Vote(Item, score) {
@@ -174,9 +179,9 @@ export default {
         this.IfSucess = true
       } else {
         this.$alert.show({
-              title: '提示',
-              content: '投票失败！'
-            })
+          title: '提示',
+          content: '投票失败！'
+        })
       }
     }
   },

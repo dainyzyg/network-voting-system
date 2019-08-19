@@ -40,6 +40,7 @@ export default {
   border-radius: 4px;
   background-color: hsla(0, 0%, 100%, 0.9);
   color: #606266;
+  background-color: white;
 }
 .head {
   height: 30px;
