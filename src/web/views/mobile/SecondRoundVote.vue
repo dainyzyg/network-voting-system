@@ -196,7 +196,6 @@ export default {
   background: white;
   color: #2e89dc;
   font-size: 12px;
-  margin-top: 5px;
   border-radius: 8px;
 }
 .VoteThird,
@@ -208,7 +207,6 @@ export default {
   font-size: 12px;
   text-align: center;
   line-height: 25px;
-  margin-top: 5px;
   border-radius: 8px;
   display: flex;
   justify-content: center;
