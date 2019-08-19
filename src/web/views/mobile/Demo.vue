@@ -105,19 +105,31 @@ export default {
       switch (score) {
         case 5:
           if (this.firstCount >= 9) {
-            alert('一等奖不能超过9个！')
+            this.$alert.show({
+              title: '提示',
+              content: '一等奖不能超过9个！'
+            })
+            // alert('一等奖不能超过9个！')
             return
           }
           break
         case 3:
           if (this.secondCount >= 19) {
-            alert('二等奖不能超过19个！')
+            this.$alert.show({
+              title: '提示',
+              content: '二等奖不能超过19个！'
+            })
+            // alert('二等奖不能超过19个！')
             return
           }
           break
         case 2:
           if (this.thirdCount >= 28) {
-            alert('三等奖不能超过28个！')
+            this.$alert.show({
+              title: '提示',
+              content: '三等奖不能超过28个！'
+            })
+            // alert('三等奖不能超过28个！')
             return
           }
           break
@@ -129,7 +141,11 @@ export default {
       for (let i in this.projects) {
         let item = this.projects[i]
         if (item.score === undefined) {
-          alert(`有未投票的项目：${parseInt(i) + 1}.${item.name}`)
+          this.$alert.show({
+            title: '提示',
+            content: `有未投票的项目：${parseInt(i) + 1}.${item.name}`
+          })
+          // alert(`有未投票的项目：${parseInt(i) + 1}.${item.name}`)
           return
         }
       }
@@ -157,7 +173,10 @@ export default {
       if (r.data.success) {
         this.IfSucess = true
       } else {
-        alert('投票失败!')
+        this.$alert.show({
+              title: '提示',
+              content: '投票失败！'
+            })
       }
     }
   },
@@ -187,7 +206,6 @@ export default {
   width: 100vw;
 }
 .VoteHeader {
-  /* height: 196px; */
   flex: 0 0 140px;
   width: 100vw;
   background: #a9e0ff;
@@ -264,7 +282,7 @@ export default {
 } */
 .VoteItem {
   margin: 10px 10px;
-  height: 80px;
+  height: 100px;
   background: #d4efff;
   border-radius: 15px;
   display: flex;
@@ -273,24 +291,24 @@ export default {
 }
 .ItemOrder {
   color: #2e89dc;
-  font-size: 30px;
-  height: 60px;
-  line-height: 60px;
+  font-size: 15px;
+  height: 80px;
+  line-height: 80px;
   text-align: center;
-  width: 40px;
+  width: 25px;
   margin-left: 2px;
   padding-right: 2px;
   border-right: solid white 2px;
 }
 .ItemInfo {
-  height: 70px;
+  height: 100px;
   width: 100%;
   display: flex;
   flex-direction: column;
   margin: 0px 5px;
 }
 .ItemName {
-  height: 40px;
+  height: 60px;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -299,7 +317,7 @@ export default {
 }
 .ItemTitle {
   color: #2e89dc;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: bold;
   text-align: left;
   width: 190px;
@@ -324,13 +342,13 @@ export default {
   color: #2e89dc;
 }
 .ClassName {
-  font-size: 10px;
+  font-size: 13px;
   color: #2e89dc;
   margin-bottom: 2px;
   margin-top: 1px;
 }
 .ItemVote {
-  height: 30px;
+  height: 40px;
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -347,7 +365,6 @@ export default {
   font-size: 12px;
   text-align: center;
   line-height: 25px;
-  margin-top: 5px;
   border-radius: 8px;
   display: flex;
   align-items: center;
