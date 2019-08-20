@@ -100,7 +100,7 @@ Modal(:show='show')
   //-   .voter(v-for="i in RoundResult.noPlace") {{i.name}}
   .btn-wrapper
    .btn(@click="close") 关闭
-   .btn(@click="refesh") 刷新
+  //-  .btn(@click="refesh") 刷新
 </template>
 
 <script>
