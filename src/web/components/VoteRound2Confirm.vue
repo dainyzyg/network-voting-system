@@ -29,7 +29,7 @@ export default {
   components: {
     Modal
   },
-  props: ['show', 'Round1Result', 'IfSucess','isVoting'],
+  props: ['show', 'Round1Result', 'IfSucess', 'isVoting'],
   data() {
     return {}
   },
@@ -54,7 +54,7 @@ export default {
         return this.Round1Result.filter(i => i.trust === false)
       }
       return []
-    },
+    }
   }
 }
 </script>
@@ -89,7 +89,7 @@ export default {
   flex: 0 0 360px;
   display: flex;
   flex-direction: column;
-  justify-content:center;
+  justify-content: center;
   align-items: center;
   padding: 0 20px;
   color: #2e89dc;
@@ -99,7 +99,7 @@ export default {
 .InfoTitle1,
 .InfoTitle2 {
   text-align: center;
-  margin:20px 0
+  margin: 20px 0;
 }
 .EnterRound2 {
   display: flex;
@@ -121,6 +121,7 @@ export default {
 }
 .VoteRank {
   overflow: scroll;
+  -webkit-overflow-scrolling: touch;
   padding: 5px 0;
   width: 90%;
 }

@@ -4,27 +4,33 @@
     .btn(@click="setRound(1)") 设置当前为第一轮投票
     .btn(@click="setRound(2)") 设置当前为第二轮投票
     .btn(@click="getRound1User") 查看第一轮投票人数
+    .btn(@click="getRound1UserDetail") 查看第一轮个人投票情况
     .btn(@click="getRound1Result") 查看第一轮投票结果
     .btn(@click="getRound2User") 查看第二轮投票人数
+    .btn(@click="getRound2UserDetail") 查看第二轮个人投票情况
     .btn(@click="getRound2Result") 查看第二轮投票结果
     //- .btn(@click="reset") 重置投票数据
     VoteRound1User(@refesh="getRoundUser" :show.sync="showRound1User" :Round1User="Round1User")
+    VoteUserDetail(:show.sync="showVoteUserDetail" :Round1User="Round1User" :round="round")
     VoteResult(:show.sync="showRoundResult" :RoundResult="RoundResult" :round="round")
 </template>
 
 <script>
 import VoteRound1User from '@/components/VoteRound1User.vue'
+import VoteUserDetail from '@/components/VoteUserDetail.vue'
 import VoteResult from '@/components/VoteResult.vue'
 
 export default {
   name: 'home',
   components: {
     VoteRound1User,
+    VoteUserDetail,
     VoteResult
   },
   data() {
     return {
       round: 1,
+      showVoteUserDetail: false,
       showRound1User: false,
       showRoundResult: false,
       result: '',
@@ -54,6 +60,19 @@ export default {
       this.round = 1
       this.getRoundUser()
     },
+    async getRound1UserDetail() {
+      this.round = 1
+      this.showVoteUserDetail = true
+      let r = await this.$axios.get('getRound1User')
+      this.Round1User = r.data
+    },
+    async getRound2UserDetail() {
+      this.round = 2
+      this.showVoteUserDetail = true
+      let r = await this.$axios.get('getRound2User')
+      this.Round1User = r.data
+    },
+
     getRound2User() {
       this.round = 2
       this.getRoundUser()

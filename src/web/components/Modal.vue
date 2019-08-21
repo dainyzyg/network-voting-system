@@ -32,7 +32,7 @@ export default {
 <style scoped>
 .modal {
   /* box-shadow: 0px 8px 6px -6px #ccc inset; */
-  position: absolute;
+  position: fixed;
   top: 0;
   bottom: 0;
   left: 0;

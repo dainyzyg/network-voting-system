@@ -171,6 +171,7 @@ export default {
 }
 .VoteRank {
   overflow: scroll;
+  -webkit-overflow-scrolling: touch;
   padding: 5px 0;
   width: 90%;
 }

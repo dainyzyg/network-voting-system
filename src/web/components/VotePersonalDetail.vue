@@ -2,10 +2,10 @@
 Modal(:show='show')
   .NetWorkVoting
     .VoteHeader
-      .VoteTitle1 {{round==1?'第一轮投票结果':'第二轮投票结果'}}
-      .VoteTitle2 投票人数:{{RoundResult.votingCount}} 
+      .VoteTitle1 {{round==1?'第一轮个人投票结果':'第二轮个人投票结果'}}
+      .VoteTitle2 投票人 : {{userInfo.name}}
     .VoteContent
-      .VoteItem(v-for="Item,index in RoundResult.first" :key="Item.id")
+      .VoteItem(v-for="Item,index in userDetail")
         .ItemOrder {{index+1}}
         .ItemInfo
           .ItemName
@@ -14,90 +14,11 @@ Modal(:show='show')
               .ClassTitle 组别
               .ClassName {{Item.group}}
           .ItemVote
-            .CurrentRankFirst 一等奖
-              .CurrentTitle
+            div(v-if="round==1" :class="getRank(Item.score)") {{getLevel(Item.score)}}
+            div(v-if="round==2" :class="getRankRound2(index)") {{getLevelRound2(index)}}
             .outter 
-              .CurrentRankFirst1
-                .CurrentScoreTitle 总分:
-                .CurrentVoteScore {{Item.scoreTotal}}
-              .CurrentRankFirst1
-                .TechScoreTitle 技术分:
-                .TechVoteScore {{Item.techScore}}
-              .CurrentRankFirstGreen(v-if="getTrustCount(Item)" :class="{ CurrentRankFirstRed: getTrustColor(Item) }")
-                .TechScoreTitle 信任票:
-                .TechVoteScore {{Item.trustCount}}
-      .VoteItem(v-for="Item,index in RoundResult.second" :key="Item.id")
-        .ItemOrder {{index+1}}
-        .ItemInfo
-          .ItemName
-            .ItemTitle {{Item.name}}
-            .ItemClass
-              .ClassTitle 组别
-              .ClassName {{Item.group}}
-          .ItemVote
-            .CurrentRankSecond
-              .CurrentTitle 二等奖
-            .outter 
-              .CurrentRankSecond1
-                .CurrentScoreTitle 总分:
-                .CurrentVoteScore {{Item.scoreTotal}}
-              .CurrentRankSecond1
-                .TechScoreTitle 技术分:
-                .TechVoteScore {{Item.techScore}}
-              .CurrentRankFirstGreen(v-if="getTrustCount(Item)" :class="{ CurrentRankFirstRed: getTrustColor(Item) }")
-                .TechScoreTitle 信任票:
-                .TechVoteScore {{Item.trustCount}}
-      .VoteItem(v-for="Item,index in RoundResult.third" :key="Item.id")
-        .ItemOrder {{index+1}}
-        .ItemInfo
-          .ItemName
-            .ItemTitle {{Item.name}}
-            .ItemClass
-              .ClassTitle 组别
-              .ClassName {{Item.group}}
-          .ItemVote
-            .CurrentRankThird
-              .CurrentTitle 三等奖
-            .outter
-              .CurrentRankThird1
-                .CurrentScoreTitle 总分:
-                .CurrentVoteScore {{Item.scoreTotal}}
-              .CurrentRankThird1
-                .TechScoreTitle 技术分:
-                .TechVoteScore {{Item.techScore}}
-              .CurrentRankFirstGreen(v-if="getTrustCount(Item)" :class="{ CurrentRankFirstRed: getTrustColor(Item) }")
-                .TechScoreTitle 信任票:
-                .TechVoteScore {{Item.trustCount}}
-      .VoteItem(v-for="Item,index in RoundResult.noPlace" :key="Item.id")
-        .ItemOrder {{index+1}}
-        .ItemInfo
-          .ItemName
-            .ItemTitle {{Item.name}}
-            .ItemClass
-              .ClassTitle 组别
-              .ClassName {{Item.group}}
-          .ItemVote
-            .CurrentRankNoplace
-              .CurrentTitle 不入选
-            .outter
-              .CurrentRankNoplace1
-                .CurrentScoreTitle 总分:
-                .CurrentVoteScore {{Item.scoreTotal}}
-              .CurrentRankNoplace1
-                .TechScoreTitle 技术分:
-                .TechVoteScore {{Item.techScore}}
-              .CurrentRankFirstGreen(v-if="getTrustCount(Item)" :class="{ CurrentRankFirstRed: getTrustColor(Item) }")
-                .TechScoreTitle 信任票:
-                .TechVoteScore {{Item.trustCount}}
-  //- .content
-  //-   .tit 一等奖({{RoundResult.first.length}})：
-  //-   .voter(v-for="i in RoundResult.first") {{i.name}}
-  //-   .tit 二等奖({{RoundResult.second.length}})：
-  //-   .voter(v-for="i in RoundResult.second") {{i.name}}
-  //-   .tit 三等奖({{RoundResult.third.length}})：
-  //-   .voter(v-for="i in RoundResult.third") {{i.name}}
-  //-   .tit(v-if="RoundResult.noPlace.length>0") 未得奖({{RoundResult.noPlace.length}})：
-  //-   .voter(v-for="i in RoundResult.noPlace") {{i.name}}
+              .CurrentRankFirstGreen(v-if="round==2" :class="{ CurrentRankFirstRed: !Item.trust}")
+                .TechScoreTitle {{Item.trust?'同意':'不同意'}}
   .btn-wrapper
    .btn(@click="close") 关闭
   //-  .btn(@click="refesh") 刷新
@@ -112,13 +33,73 @@ export default {
   components: {
     Modal
   },
-  props: ['show', 'RoundResult', 'round'],
+  props: ['show', 'RoundResult', 'round', 'userDetail', 'userInfo'],
   data() {
     return {
       Round1Result: []
     }
   },
   methods: {
+    getLevel(score) {
+      let level
+      switch (score) {
+        case 5:
+          level = '一等奖'
+          break
+        case 3:
+          level = '二等奖'
+          break
+        case 2:
+          level = '三等奖'
+          break
+        case 0:
+          level = '不入选'
+          break
+        default:
+          break
+      }
+      return level
+    },
+    getRank(score) {
+      let className
+      switch (score) {
+        case 5:
+          className = 'CurrentRankFirst'
+          break
+        case 3:
+          className = 'CurrentRankSecond'
+          break
+        case 2:
+          className = 'CurrentRankThird'
+          break
+        case 0:
+          className = 'CurrentRankNoplace'
+          break
+        default:
+          break
+      }
+      let classObj = {}
+      classObj[className] = true
+      return classObj
+    },
+    getRankRound2(index) {
+      if (index <= 8) {
+        return { CurrentRankFirst: true }
+      } else if (index >= 9 && index <= 27) {
+        return { CurrentRankSecond: true }
+      } else if (index >= 28 && index <= 55) {
+        return { CurrentRankThird: true }
+      }
+    },
+    getLevelRound2(index) {
+      if (index <= 8) {
+        return '一等奖'
+      } else if (index >= 9 && index <= 27) {
+        return '二等奖'
+      } else if (index >= 28 && index <= 55) {
+        return '三等奖'
+      }
+    },
     getTrustCount(item) {
       if (item.trustCount != undefined) {
         return true
@@ -313,12 +294,12 @@ export default {
 .CurrentRankFirstGreen {
   background-color: #f0f9eb;
   color: #67c23a;
-  margin-left:2px;
+  margin-left: 2px;
 }
 .CurrentRankFirstRed {
   background-color: #fef0f0;
   color: #f56c6c;
-  margin-left:2px;
+  margin-left: 2px;
 }
 .CurrentRankSecond {
   color: #faad14;
