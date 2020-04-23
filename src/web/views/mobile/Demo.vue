@@ -110,7 +110,7 @@ export default {
       if (!localStorage.projects) {
         return false
       }
-      //如果本地有数据，判断当前投票人是否和本地投票人是否相同，不同直接从后台取
+      //如果本地有数据，判断当前投票人是否和本地投票人相同，不同直接从后台取
       if (localStorage.userID != this.userInfo.id) {
         return false
       }
