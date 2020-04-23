@@ -69,11 +69,22 @@ export default {
   },
   async created() {
     await this.getUser()
-    // console.log(this.getRound())
     let i = await this.getRound()
-    console.log(i)
     if (i == 1) {
-      await this.getProjects()
+      // await this.getProjects()
+      let userID = this.getQueryVariable('id')
+      let r = await this.$axios.get('getProjects', {
+        params: {
+          userID: userID
+        }
+      })
+      let data = r.data
+      console.log(data)
+      if (this.judge(data)) {
+        this.projects = JSON.parse(localStorage.projects)
+      } else {
+        this.projects = data
+      }
     } else if (i == 2) {
       let userID = this.getQueryVariable('id')
       this.$router.push('/SecondRoundVote?id=' + userID)
@@ -88,24 +99,42 @@ export default {
           userID: userID
         }
       })
+      // console.log(r.data)
       if (!r.data) {
         throw new Error('无效的用户名！')
       }
       this.userInfo = r.data
     },
+    judge(data) {
+      //首先判断本地是否有数据，如果没有直接从后台取
+      if (!localStorage.projects) {
+        return false
+      }
+      //如果本地有数据，判断当前投票人是否和本地投票人是否相同，不同直接从后台取
+      if (localStorage.userID != this.userInfo.id) {
+        return false
+      }
+      //后台有项目数据但是当前投票人没投过票，则从本地区取数
+      if (data && data[0] && typeof data[0].score !== 'number') {
+        return true
+      }
+      //如果已投过票，则从后台取
+      return false
+    },
     async getRound() {
       let r = await this.$axios.get('getRound')
       return r.data
     },
-    async getProjects() {
-      let userID = this.getQueryVariable('id')
-      let r = await this.$axios.get('getProjects', {
-        params: {
-          userID: userID
-        }
-      })
-      this.projects = r.data
-    },
+    // async getProjects() {
+    //   let userID = this.getQueryVariable('id')
+    //   let r = await this.$axios.get('getProjects', {
+    //     params: {
+    //       userID: userID
+    //     }
+    //   })
+    //   console.log(r.data)
+    //   this.projects = r.data
+    // },
     Vote(Item, score) {
       switch (score) {
         case 5:
@@ -140,6 +169,11 @@ export default {
           break
       }
       this.$set(Item, 'score', score)
+      this.saveToLocalStorage()
+    },
+    saveToLocalStorage() {
+      localStorage.projects = JSON.stringify(this.projects)
+      localStorage.userID = this.userInfo.id
     },
     judgeData() {
       // this.show = true

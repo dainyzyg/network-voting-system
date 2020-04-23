@@ -93,7 +93,7 @@
     { id: 1565745544241000, name: '张盛彬' }
   ]
   let innerHTML = ''
-  let baseURL = 'http://124.152.240.60/mobile.html#/?id='
+  let baseURL = 'http://192.168.1.104/mobile.html#/?id='
   users.forEach(e => {
     innerHTML += `<div class="app">
       <div class="title">兰州石化公司</div>
@@ -106,7 +106,7 @@
   document.body.innerHTML = innerHTML
   users.forEach(e => {
     new QRCode(document.getElementById(e.id), {
-      text: baseURL + e.id,
+      text: baseURL + e.id+'汉字中文',
       width: 250,
       height: 250
       // colorDark: '#000000',
