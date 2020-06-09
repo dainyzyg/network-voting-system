@@ -69,9 +69,7 @@ export default {
   },
   async created() {
     await this.getUser()
-    // console.log(this.getRound())
     let i = await this.getRound()
-    console.log(i)
     if (i == 1) {
       // await this.getProjects()
       let userID = this.getQueryVariable('id')
@@ -101,6 +99,7 @@ export default {
           userID: userID
         }
       })
+      // console.log(r.data)
       if (!r.data) {
         throw new Error('无效的用户名！')
       }
@@ -126,15 +125,16 @@ export default {
       let r = await this.$axios.get('getRound')
       return r.data
     },
-    async getProjects() {
-      let userID = this.getQueryVariable('id')
-      let r = await this.$axios.get('getProjects', {
-        params: {
-          userID: userID
-        }
-      })
-      this.projects = r.data
-    },
+    // async getProjects() {
+    //   let userID = this.getQueryVariable('id')
+    //   let r = await this.$axios.get('getProjects', {
+    //     params: {
+    //       userID: userID
+    //     }
+    //   })
+    //   console.log(r.data)
+    //   this.projects = r.data
+    // },
     Vote(Item, score) {
       switch (score) {
         case 5:

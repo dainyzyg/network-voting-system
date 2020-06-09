@@ -107,7 +107,7 @@
   document.body.innerHTML = innerHTML
   users.forEach(e => {
     new QRCode(document.getElementById(e.id), {
-      text: baseURL + e.id,
+      text: baseURL + e.id+'汉字中文',
       width: 250,
       height: 250
       // colorDark: '#000000',
