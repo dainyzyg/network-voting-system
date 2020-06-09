@@ -2,7 +2,7 @@
   .NetWorkVoting
     .VoteHeader
       .VoteTitle1 兰州石化公司
-      .VoteTitle2 2018年度科学技术奖投票活动
+      .VoteTitle2 2019年度科学技术奖投票活动
       .VoteOrder (第一轮：推荐投票)
       .Voter
         .VoterTitle 投票人
@@ -73,7 +73,20 @@ export default {
     let i = await this.getRound()
     console.log(i)
     if (i == 1) {
-      await this.getProjects()
+      // await this.getProjects()
+      let userID = this.getQueryVariable('id')
+      let r = await this.$axios.get('getProjects', {
+        params: {
+          userID: userID
+        }
+      })
+      let data = r.data
+      console.log(data)
+      if (this.judge(data)) {
+        this.projects = JSON.parse(localStorage.projects)
+      } else {
+        this.projects = data
+      }
     } else if (i == 2) {
       let userID = this.getQueryVariable('id')
       this.$router.push('/SecondRoundVote?id=' + userID)
@@ -93,6 +106,22 @@ export default {
       }
       this.userInfo = r.data
     },
+    judge(data) {
+      //首先判断本地是否有数据，如果没有直接从后台取
+      if (!localStorage.projects) {
+        return false
+      }
+      //如果本地有数据，判断当前投票人是否和本地投票人相同，不同直接从后台取
+      if (localStorage.userID != this.userInfo.id) {
+        return false
+      }
+      //后台有项目数据但是当前投票人没投过票，则从本地区取数
+      if (data && data[0] && typeof data[0].score !== 'number') {
+        return true
+      }
+      //如果已投过票，则从后台取
+      return false
+    },
     async getRound() {
       let r = await this.$axios.get('getRound')
       return r.data
@@ -109,30 +138,30 @@ export default {
     Vote(Item, score) {
       switch (score) {
         case 5:
-          if (this.firstCount >= 9) {
+          if (this.firstCount >= 4) {
             this.$alert.show({
               title: '提示',
-              content: '一等奖不能超过9个！'
+              content: '一等奖不能超过4个！'
             })
             // alert('一等奖不能超过9个！')
             return
           }
           break
         case 3:
-          if (this.secondCount >= 19) {
+          if (this.secondCount >= 9) {
             this.$alert.show({
               title: '提示',
-              content: '二等奖不能超过19个！'
+              content: '二等奖不能超过9个！'
             })
             // alert('二等奖不能超过19个！')
             return
           }
           break
         case 2:
-          if (this.thirdCount >= 28) {
+          if (this.thirdCount >= 20) {
             this.$alert.show({
               title: '提示',
-              content: '三等奖不能超过28个！'
+              content: '三等奖不能超过20个！'
             })
             // alert('三等奖不能超过28个！')
             return
@@ -140,7 +169,47 @@ export default {
           break
       }
       this.$set(Item, 'score', score)
+      this.saveToLocalStorage()
     },
+    saveToLocalStorage() {
+      localStorage.projects = JSON.stringify(this.projects)
+      localStorage.userID = this.userInfo.id
+    },
+    // Vote(Item, score) {
+    //   switch (score) {
+    //     case 5:
+    //       if (this.firstCount >= 9) {
+    //         this.$alert.show({
+    //           title: '提示',
+    //           content: '一等奖不能超过9个！'
+    //         })
+    //         // alert('一等奖不能超过9个！')
+    //         return
+    //       }
+    //       break
+    //     case 3:
+    //       if (this.secondCount >= 19) {
+    //         this.$alert.show({
+    //           title: '提示',
+    //           content: '二等奖不能超过19个！'
+    //         })
+    //         // alert('二等奖不能超过19个！')
+    //         return
+    //       }
+    //       break
+    //     case 2:
+    //       if (this.thirdCount >= 28) {
+    //         this.$alert.show({
+    //           title: '提示',
+    //           content: '三等奖不能超过28个！'
+    //         })
+    //         // alert('三等奖不能超过28个！')
+    //         return
+    //       }
+    //       break
+    //   }
+    //   this.$set(Item, 'score', score)
+    // },
     judgeData() {
       // this.show = true
       for (let i in this.projects) {
@@ -325,7 +394,8 @@ export default {
   font-size: 14px;
   font-weight: bold;
   text-align: left;
-  width: 190px;
+  flex: 1;
+  /* width: 190px; */
 }
 .ItemClass {
   display: flex;
@@ -364,7 +434,7 @@ export default {
 .VoteThird,
 .VoteDisagree {
   height: 25px;
-  width: 60px;
+  width: 62px;
   background: white;
   color: gray;
   font-size: 12px;

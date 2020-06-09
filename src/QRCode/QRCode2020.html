@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>二维码</title>
+    <style>
+      * {
+        font-family: 'PingFang SC', 'Microsoft YaHei' !important;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        overflow: auto;
+      }
+      @page {
+        size: A4;
+        margin: 2vw 1vw;
+        padding: 0vw;
+      }
+      .page {
+        width: 100vw;
+        height: 100vh;
+        /* background: silver; */
+        display: flex;
+        flex-wrap: wrap;
+        /* align-items: flex-start; */
+        /* border: 1px solid black; */
+      }
+      .item {
+        /* background: skyblue; */
+        flex: 0 0 50vw;
+        height: 50vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+      .qrcode {
+        margin-top: 20px;
+        width: 150px;
+        height: 150px;
+        background: skyblue;
+      }
+      .title {
+        font-size: 20px;
+        height: 30px;
+        font-weight: bold;
+      }
+      .url {
+        display: none;
+        padding-top: 15px;
+        padding-left: 20px;
+        padding-right: 20px;
+        font-size: 15px;
+        word-break: break-all;
+      }
+      .red {
+        background-color: red;
+      }
+      .blue {
+        background-color: blue;
+      }
+      .yellow {
+        background-color: yellow;
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>
+      <strong
+        >We're sorry but voting doesn't work properly without JavaScript enabled. Please enable it
+        to continue.
+      </strong>
+    </noscript>
+    `
+    <div class="page">
+      <div class="item">
+        <div class="title">兰州石化公司</div>
+        <div class="title">2019年度项目成果投票活动</div>
+        <div class="title">管理员</div>
+        <div class="qrcode" id="111"></div>
+        <div class="url" id="111url"></div>
+      </div>
+      <!-- <div class="item">
+        <div class="title">兰州石化公司</div>
+        <div class="title">2019年度项目成果投票活动</div>
+        <div class="title">投票结果（项目）</div>
+        <div class="qrcode" id="222"></div>
+        <div class="url" id="222url"></div>
+      </div> -->
+    </div>
+  </body>
+</html>
+<script src="QRCode.js"></script>
+<script>
+  function ObjectId(str) {
+    return str
+  }
+
+  let users = [
+    { name: '郭健', role: '副主任', id: 1565745288387699 },
+    { name: '王世宏', role: '副主任', id: 1565745304796499 },
+    { name: '王晓路', role: '副主任', id: 1565745317121599 },
+    { name: '宋健强', role: '副主任', id: 1565745326326500 },
+    { name: '张秋怡', role: '副主任', id: 1565745334908500 },
+    { name: '王乐福', role: '副主任', id: 1565745345083600 },
+    { name: '卢建国', role: '成员', id: 1565745367708200 },
+    { name: '王福善', role: '成员', id: 1565745377159199 },
+    { name: '李成贵', role: '成员', id: 1565745386952600 },
+    { name: '肖春景', role: '成员', id: 1565745403661299 },
+    { name: '陈勃', role: '成员', id: 1565745426855199 },
+    { name: '谢恒', role: '成员', id: 1565745454500399 },
+    { name: '孙文生', role: '成员', id: 1565745463848400 },
+    { name: '陈永生', role: '成员', id: 1565745471931700 },
+    { name: '姚殳', role: '成员', id: 1565745481024200 },
+    { name: '刘光武', role: '成员', id: 1565745491083099 },
+    { name: '刘辉', role: '成员', id: 1565745499870099 },
+    { name: '张君屹', role: '成员', id: 1565745507402099 },
+    { name: '张守汉', role: '成员', id: 1565745517973099 },
+    { name: '张霖', role: '成员', id: 1565745526327400 },
+    { name: '宋丹', role: '成员', id: 1565745535443000 },
+    { name: '张盛彬', role: '成员', id: 1565745544241000 },
+    { name: '刘海生', role: '成员', id: 1591577671819399 },
+    { name: '赵东波', role: '成员', id: 1591577681915099 }
+  ]
+
+  let innerHTML = ''
+
+  let baseURL = `http://124.152.240.31:8003/mobile.html#/?id=`
+
+  for (let i = 0; i < users.length; i += 4) {
+    let page = `<div class="page">`
+    for (let j = 0; j < 4; j++) {
+      let index = i + j
+      if (index < users.length) {
+        page += `<div class="item">
+        <div class="title">兰州石化公司</div>
+        <div class="title">2019年度项目成果投票活动</div>
+        <div class="title">投票人：${users[index].name}</div>
+        <div class="qrcode" id="${users[index].id}"></div>
+        <div class="url">${baseURL + users[index].id}</div>
+      </div>`
+      } else {
+        page += `<div class="item"></div>`
+      }
+    }
+    page += '</div>'
+    // console.log(page)
+    innerHTML += page
+  }
+
+  document.body.innerHTML += innerHTML
+  users.forEach(e => {
+    new QRCode(document.getElementById(e.id), {
+      text: baseURL + e.id,
+      width: 150,
+      height: 150
+      // colorDark: '#000000',
+      // colorLight: '#ffffff',
+      // correctLevel: QRCode.CorrectLevel.H
+    })
+  })
+
+  document.getElementById(
+    '111url'
+  ).innerHTML = ` http://124.152.240.31:8003/mobile.html#/management`
+  //   document.getElementById('222url').innerHTML=`http://124.152.240.31:8003/mobile.html#/management`
+  new QRCode(document.getElementById('111'), {
+    text: `http://124.152.240.31:8003/mobile.html#/management`,
+    width: 150,
+    height: 150
+  })
+  // new QRCode(document.getElementById('222'), {
+  //   text:`http://124.152.240.31:8003/mobile.html#/management`,
+  //   width: 150,
+  //   height: 150
+  // })
+</script>

@@ -27,6 +27,11 @@ export default new Router({
       component: () => import(/* webpackChunkName: "Management" */ './views/mobile/Management.vue')
     },
     {
+      path: '/Report',
+      name: 'Report',
+      component: () => import(/* webpackChunkName: "Report" */ './views/mobile/Report.vue')
+    },
+    {
       path: '/SecondRoundVote',
       name: 'SecondRoundVote',
       component: () =>

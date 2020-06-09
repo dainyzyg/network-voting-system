@@ -2,7 +2,7 @@
   .NetWorkVoting
     .VoteHeader
       .VoteTitle1 兰州石化公司
-      .VoteTitle2 2018年度科学技术奖投票活动
+      .VoteTitle2 2019年度科学技术奖投票活动
       .VoteOrder (第二轮：信任投票)
       .Voter
         .VoterTitle 投票人
@@ -57,29 +57,29 @@ export default {
   },
   methods: {
     getRankGrade(index) {
-      if (index <= 8) {
+      if (index <= 3) {
         return '一等奖'
-      } else if (index >= 9 && index <= 27) {
+      } else if (index >= 4 && index <= 12) {
         return '二等奖'
-      } else if (index >= 28 && index <= 55) {
+      } else if (index >= 13 && index <= 32) {
         return '三等奖'
       }
     },
     getcolor(index) {
-      if (index <= 8) {
+      if (index <= 3) {
         return '#f5222d'
-      } else if (index >= 9 && index <= 27) {
+      } else if (index >= 4 && index <= 12) {
         return '#faad14'
-      } else if (index >= 28 && index <= 55) {
+      } else if (index >= 13 && index <= 32) {
         return '#52c41a'
       }
     },
     getborder(index) {
-      if (index <= 8) {
+      if (index <= 3) {
         return '1px solid #ffa39e'
-      } else if (index >= 9 && index <= 27) {
+      } else if (index >= 4 && index <= 12) {
         return '1px solid #ffe58f'
-      } else if (index >= 28 && index <= 55) {
+      } else if (index >= 13 && index <= 32) {
         return '1px solid #b7eb8f'
       }
     },
@@ -102,7 +102,12 @@ export default {
           userID: userID
         }
       })
-      this.Round1Result = r.data
+      let data = r.data
+      if (this.judge(data)) {
+        this.Round1Result = JSON.parse(localStorage.projects)
+      } else {
+        this.Round1Result = data
+      }
     },
     async votingRound2() {
       this.isVoting = true
@@ -121,8 +126,29 @@ export default {
         })
       }
     },
+    judge(data) {
+      //首先判断本地是否有数据，如果没有直接从后台取
+      if (!localStorage.projects) {
+        return false
+      }
+      //如果本地有数据，判断当前投票人是否和本地投票人相同，不同直接从后台取
+      if (localStorage.userID != this.userInfo.id) {
+        return false
+      }
+      //后台有项目数据但是当前投票人没投过票，则从本地区取数
+      if (data && data[0] && typeof data[0].trust !== 'boolean') {
+        return true
+      }
+      //如果已投过票，则从后台取
+      return false
+    },
     Vote(Item, trust) {
       this.$set(Item, 'trust', trust)
+      this.saveToLocalStorage()
+    },
+    saveToLocalStorage() {
+      localStorage.projects = JSON.stringify(this.Round1Result)
+      localStorage.userID = this.userInfo.id
     },
     judgeData() {
       // this.show = true
@@ -204,7 +230,7 @@ export default {
   font-size: 12px;
   border-radius: 8px;
 }
-.VoteThird_VoteDisagree{
+.VoteThird_VoteDisagree {
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -274,7 +300,8 @@ export default {
   font-size: 14px;
   font-weight: bold;
   text-align: left;
-  width: 190px;
+  flex: 1;
+  /* width: 190px; */
 }
 .ItemClass {
   display: flex;
@@ -313,7 +340,7 @@ export default {
 .VoteThird,
 .VoteDisagree {
   height: 25px;
-  width: 60px;
+  width: 62px;
   background: white;
   color: gray;
   font-size: 12px;

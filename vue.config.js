@@ -7,9 +7,34 @@ const path = require('path')
 let baseConfig = {
   lintOnSave: false,
   configureWebpack: {
+    // entry: { vvv: ['element-ui'] },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, 'src/web/')
+      }
+    },
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          vendors: {
+            name: 'chunk-vendors',
+            // test: /element-ui/,
+            test: module => {
+              // console.log('----------------------------------')
+              // console.log(module.context)
+              // console.log(module.resource)
+              if (/element-ui/.test(module.context)) {
+                console.log(module.context)
+                console.log(module.resource)
+              }
+              return false
+              // return /react|redux|prop-types/.test(module.context)
+            },
+            priority: -10,
+            chunks: 'initial'
+            // chunks: chunk => chunk.name === 'index'
+          }
+        }
       }
     }
   }
@@ -95,6 +120,7 @@ module.exports = {
       template: 'public/index.html',
       // 在 dist/index.html 的输出
       filename: 'index.html'
+      // chunks: ['xxxchunk-vendors-index', 'xxxchunk-common-index', 'index']
     },
     mobile: {
       // page 的入口
@@ -102,7 +128,8 @@ module.exports = {
       // 模板来源
       template: 'public/mobile.html',
       // 在 dist/index.html 的输出
-      filename: 'mobile.html'
+      filename: 'mobile.html',
+      chunks: ['chunk-common', 'mobile']
     }
   }
 }

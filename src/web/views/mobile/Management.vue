@@ -108,9 +108,9 @@ export default {
       }
       let r2 = await this.$axios.get('getRound1ResultNew')
       let list = r2.data.result
-      const firstCount = 9
-      const secondCount = 19
-      const thirdCount = 28
+      const firstCount = 4
+      const secondCount = 9
+      const thirdCount = 20
       this.RoundResult = {
         first: [],
         second: [],
@@ -131,6 +131,7 @@ export default {
         let project = list[i]
         this.RoundResult.third.push(project)
       }
+
       // this.RoundResult.votingCount = r2.data.votingCount
     },
     async getRound2Result() {

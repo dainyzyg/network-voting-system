@@ -83,20 +83,20 @@ export default {
       return classObj
     },
     getRankRound2(index) {
-      if (index <= 8) {
+      if (index <= 3) {
         return { CurrentRankFirst: true }
-      } else if (index >= 9 && index <= 27) {
+      } else if (index >= 4 && index <= 12) {
         return { CurrentRankSecond: true }
-      } else if (index >= 28 && index <= 55) {
+      } else if (index >= 13 && index <= 32) {
         return { CurrentRankThird: true }
       }
     },
     getLevelRound2(index) {
-      if (index <= 8) {
+      if (index <= 3) {
         return '一等奖'
-      } else if (index >= 9 && index <= 27) {
+      } else if (index >= 4 && index <= 12) {
         return '二等奖'
-      } else if (index >= 28 && index <= 55) {
+      } else if (index >= 13 && index <= 32) {
         return '三等奖'
       }
     },
@@ -217,7 +217,8 @@ export default {
   font-size: 14px;
   font-weight: bold;
   text-align: left;
-  width: 190px;
+  /* width: 190px; */
+  flex: 1;
 }
 .ItemClass {
   display: flex;
@@ -225,7 +226,7 @@ export default {
   justify-content: center;
   align-items: center;
   height: 40px;
-  width: 60px;
+  width: 62px;
   border-radius: 10px;
   background: #a9e0ff;
 }
@@ -275,7 +276,7 @@ export default {
 .CurrentRankFirst {
   color: #f5222d;
   border: 1px solid #ffa39e;
-  width: 36px;
+  width: 45px;
 }
 .outter {
   display: flex;
@@ -304,17 +305,17 @@ export default {
 .CurrentRankSecond {
   color: #faad14;
   border: 1px solid #ffe58f;
-  width: 36px;
+  width: 45px;
 }
 .CurrentRankThird {
   color: #52c41a;
   border: 1px solid #b7eb8f;
-  width: 36px;
+  width: 45px;
 }
 .CurrentRankNoplace {
   color: #8c8c8c;
   border: 1px solid #bfbfbf;
-  width: 36px;
+  width: 45 px;
 }
 .btn-wrapper {
   margin: 0 10px;

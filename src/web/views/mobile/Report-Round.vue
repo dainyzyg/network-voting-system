@@ -1,11 +1,11 @@
 <template lang="pug">
-Modal.modal(:show='show')
+.page
   .NetWorkVoting
     .VoteHeader
       .VoteTitle1 {{round==1?'第一轮投票结果':'第二轮投票结果'}}
       .VoteTitle2 投票人数:{{RoundResult.votingCount}} 
     .VoteContent
-      .VoteItem(v-for="Item,index in RoundResult.first" :key="Item.id" @click="getProjectVoteDetail(Item.id)")
+      .VoteItem(v-for="Item,index in RoundResult.first" :key="Item.id")
         .ItemOrder {{index+1}}
         .ItemInfo
           .ItemName
@@ -15,6 +15,7 @@ Modal.modal(:show='show')
               .ClassName {{Item.group}}
           .ItemVote
             .CurrentRankFirst 一等奖
+              .CurrentTitle
             .outter 
               .CurrentRankFirst1
                 .CurrentScoreTitle 总分:
@@ -34,7 +35,8 @@ Modal.modal(:show='show')
               .ClassTitle 组别
               .ClassName {{Item.group}}
           .ItemVote
-            .CurrentRankSecond 二等奖
+            .CurrentRankSecond
+              .CurrentTitle 二等奖
             .outter 
               .CurrentRankSecond1
                 .CurrentScoreTitle 总分:
@@ -54,7 +56,8 @@ Modal.modal(:show='show')
               .ClassTitle 组别
               .ClassName {{Item.group}}
           .ItemVote
-            .CurrentRankThird 三等奖
+            .CurrentRankThird
+              .CurrentTitle 三等奖
             .outter
               .CurrentRankThird1
                 .CurrentScoreTitle 总分:
@@ -74,7 +77,8 @@ Modal.modal(:show='show')
               .ClassTitle 组别
               .ClassName {{Item.group}}
           .ItemVote
-            .CurrentRankNoplace 不入选
+            .CurrentRankNoplace
+              .CurrentTitle 不入选
             .outter
               .CurrentRankNoplace1
                 .CurrentScoreTitle 总分:
@@ -94,8 +98,8 @@ Modal.modal(:show='show')
   //-   .voter(v-for="i in RoundResult.third") {{i.name}}
   //-   .tit(v-if="RoundResult.noPlace.length>0") 未得奖({{RoundResult.noPlace.length}})：
   //-   .voter(v-for="i in RoundResult.noPlace") {{i.name}}
-  .btn-wrapper
-   .btn(@click="close") 关闭
+//-   .btn-wrapper
+//-    .btn(@click="close") 关闭
   //-  .btn(@click="refesh") 刷新
 </template>
 
@@ -108,24 +112,65 @@ export default {
   components: {
     Modal
   },
-  props: ['show', 'RoundResult', 'round'],
+  props: ['show'],
   data() {
     return {
-      Round1Result: []
+      RoundResult: [],
+      round: 1
     }
   },
+  created() {
+    console.log('createdcreatedcreatedcreated')
+    this.getRound1Result()
+  },
   methods: {
-    async getProjectVoteDetail(id) {
-      let url = 'getProjectDetailRound1'
-      if (this.round != 1) {
-        url = 'getProjectDetailRound2'
+    async getRound1Result() {
+      this.round = 1
+      let r = await this.$axios.get('getRound')
+      if (r.data != 2) {
+        this.result =
+          '请在第一轮投票全部完成后，将当前投票轮次设置成第二轮，然后再查看第一轮投票结果！'
+        return
       }
-      let r = await this.$axios.get(url, {
-        params: {
-          projectID: id
-        }
-      })
-      console.log(r.data)
+      let r2 = await this.$axios.get('getRound1ResultNew')
+      let list = r2.data.result
+      const firstCount = 4
+      const secondCount = 9
+      const thirdCount = 32
+      this.RoundResult = {
+        first: [],
+        second: [],
+        third: [],
+        noPlace: [],
+        votingCount: r2.data.votingCount
+      }
+      this.showRoundResult = true
+      for (let i = 0; i < firstCount; i++) {
+        let project = list[i]
+        this.RoundResult.first.push(project)
+      }
+      for (let i = firstCount; i < firstCount + secondCount; i++) {
+        let project = list[i]
+        this.RoundResult.second.push(project)
+      }
+      for (let i = firstCount + secondCount; i < firstCount + secondCount + thirdCount; i++) {
+        let project = list[i]
+        this.RoundResult.third.push(project)
+      }
+      // this.RoundResult.votingCount = r2.data.votingCount
+    },
+    async getRound2Result() {
+      this.round = 2
+      this.RoundResult = {
+        first: [],
+        second: [],
+        third: [],
+        noPlace: [],
+        votingCount: 0
+      }
+      this.showRoundResult = true
+      let r2 = await this.$axios.get('getRound2Result')
+      this.RoundResult = r2.data
     },
     getTrustCount(item) {
       if (item.trustCount != undefined) {
@@ -165,6 +210,11 @@ export default {
 }
 </script>
 <style scoped>
+@page {
+  size: A4;
+  margin: 2vw 1vw;
+  padding: 0vw;
+}
 /* .content {
   color: slategray;
   flex: 1;
@@ -172,23 +222,21 @@ export default {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
 } */
-.modal {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  width: 100vw;
-}
 .NetWorkVoting {
-  display: flex;
+  position: relative;
+  /* display: flex; */
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex: 1;
-  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+  padding: 0 100px;
 }
 .VoteHeader {
-  flex: 0 0 60px;
-  width: 100vw;
+  position: relative;
+  height: 60px;
+  width: 100%;
   background: #a9e0ff;
   display: flex;
   flex-direction: column;
@@ -198,19 +246,24 @@ export default {
 }
 .VoteTitle1,
 .VoteTitle2 {
+  position: relative;
   color: #2e89dc;
   font-size: 16px;
   line-height: 24px;
   font-weight: bold;
 }
 .VoteContent {
-  width: 100vw;
-  flex: 1;
+  position: relative;
+  width: 100%;
+  /* flex: 1; */
   background: white;
-  -webkit-overflow-scrolling: touch;
-  overflow: scroll;
+  /* -webkit-overflow-scrolling: touch;
+  overflow: scroll; */
 }
 .VoteItem {
+  position: relative;
+  page-break-inside: avoid;
+  /* page-break-after: always; */
   margin: 10px 10px;
   height: 100px;
   background: #d4efff;
@@ -220,6 +273,8 @@ export default {
   align-items: center;
 }
 .ItemOrder {
+  position: relative;
+  page-break-inside: avoid;
   color: #2e89dc;
   font-size: 15px;
   height: 80px;
@@ -231,6 +286,8 @@ export default {
   border-right: solid white 2px;
 }
 .ItemInfo {
+  position: relative;
+  page-break-inside: avoid;
   height: 100px;
   width: 100%;
   display: flex;
@@ -238,6 +295,8 @@ export default {
   margin: 0px 5px;
 }
 .ItemName {
+  position: relative;
+  page-break-inside: avoid;
   height: 60px;
   width: 100%;
   display: flex;
@@ -246,14 +305,17 @@ export default {
   border-bottom: solid 2px white;
 }
 .ItemTitle {
+  position: relative;
+  page-break-inside: avoid;
   color: #2e89dc;
   font-size: 14px;
   font-weight: bold;
   text-align: left;
-  /* width: 190px; */
-  flex: 1;
+  width: 190px;
 }
 .ItemClass {
+  position: relative;
+  page-break-inside: avoid;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -309,7 +371,7 @@ export default {
 .CurrentRankFirst {
   color: #f5222d;
   border: 1px solid #ffa39e;
-  width: 45px;
+  width: 36px;
 }
 .outter {
   display: flex;
@@ -338,17 +400,17 @@ export default {
 .CurrentRankSecond {
   color: #faad14;
   border: 1px solid #ffe58f;
-  width: 45px;
+  width: 36px;
 }
 .CurrentRankThird {
   color: #52c41a;
   border: 1px solid #b7eb8f;
-  width: 45px;
+  width: 36px;
 }
 .CurrentRankNoplace {
   color: #8c8c8c;
   border: 1px solid #bfbfbf;
-  width: 45px;
+  width: 36px;
 }
 .btn-wrapper {
   margin: 0 10px;
