@@ -26,7 +26,7 @@
         .ItemOrder {{index+1}}
         .ItemInfo
           .ItemName
-            .ItemTitle {{Item.name}}
+            .ItemTitle {{Item.name}} (技术分:{{Item.techScore}})
             .ItemClass
               .ClassTitle 类别
               .ClassName {{Item.group}}

@@ -5,7 +5,7 @@ Modal.modal(:show='show')
       .VoteTitle1 {{round==1?'第一轮投票结果':'第二轮投票结果'}}
       .VoteTitle2 投票人数:{{RoundResult.votingCount}} 
     .VoteContent
-      .VoteItem(v-for="Item,index in RoundResult.first" :key="Item.id" @click="getProjectVoteDetail(Item.id)")
+      .VoteItem(v-for="Item,index in RoundResult.first" :key="Item.id" @click="getProjectVoteDetail(Item.id,Item.name)")
         .ItemOrder {{index+1}}
         .ItemInfo
           .ItemName
@@ -25,7 +25,7 @@ Modal.modal(:show='show')
               .CurrentRankFirstGreen(v-if="getTrustCount(Item)" :class="{ CurrentRankFirstRed: getTrustColor(Item) }")
                 .TechScoreTitle 信任票:
                 .TechVoteScore {{Item.trustCount}}
-      .VoteItem(v-for="Item,index in RoundResult.second" :key="Item.id")
+      .VoteItem(v-for="Item,index in RoundResult.second" :key="Item.id" @click="getProjectVoteDetail(Item.id,Item.name)")
         .ItemOrder {{index+1}}
         .ItemInfo
           .ItemName
@@ -45,7 +45,7 @@ Modal.modal(:show='show')
               .CurrentRankFirstGreen(v-if="getTrustCount(Item)" :class="{ CurrentRankFirstRed: getTrustColor(Item) }")
                 .TechScoreTitle 信任票:
                 .TechVoteScore {{Item.trustCount}}
-      .VoteItem(v-for="Item,index in RoundResult.third" :key="Item.id")
+      .VoteItem(v-for="Item,index in RoundResult.third" :key="Item.id" @click="getProjectVoteDetail(Item.id,Item.name)")
         .ItemOrder {{index+1}}
         .ItemInfo
           .ItemName
@@ -65,7 +65,7 @@ Modal.modal(:show='show')
               .CurrentRankFirstGreen(v-if="getTrustCount(Item)" :class="{ CurrentRankFirstRed: getTrustColor(Item) }")
                 .TechScoreTitle 信任票:
                 .TechVoteScore {{Item.trustCount}}
-      .VoteItem(v-for="Item,index in RoundResult.noPlace" :key="Item.id")
+      .VoteItem(v-for="Item,index in RoundResult.noPlace" :key="Item.id" @click="getProjectVoteDetail(Item.id,Item.name)")
         .ItemOrder {{index+1}}
         .ItemInfo
           .ItemName
@@ -85,37 +85,36 @@ Modal.modal(:show='show')
               .CurrentRankFirstGreen(v-if="getTrustCount(Item)" :class="{ CurrentRankFirstRed: getTrustColor(Item) }")
                 .TechScoreTitle 信任票:
                 .TechVoteScore {{Item.trustCount}}
-  //- .content
-  //-   .tit 一等奖({{RoundResult.first.length}})：
-  //-   .voter(v-for="i in RoundResult.first") {{i.name}}
-  //-   .tit 二等奖({{RoundResult.second.length}})：
-  //-   .voter(v-for="i in RoundResult.second") {{i.name}}
-  //-   .tit 三等奖({{RoundResult.third.length}})：
-  //-   .voter(v-for="i in RoundResult.third") {{i.name}}
-  //-   .tit(v-if="RoundResult.noPlace.length>0") 未得奖({{RoundResult.noPlace.length}})：
-  //-   .voter(v-for="i in RoundResult.noPlace") {{i.name}}
   .btn-wrapper
    .btn(@click="close") 关闭
-  //-  .btn(@click="refesh") 刷新
+  ProjectDetail(:show.sync="showProjectDetail" :round="round" :projectDetailList="projectDetailList" :projectName="projectName")
 </template>
 
 <script>
 import Vue from 'vue'
 import Modal from '@/components/Modal.vue'
+import ProjectDetail from '@/components/VoteProjectDetail.vue'
 
 export default {
   name: 'home',
   components: {
-    Modal
+    Modal,
+    ProjectDetail
   },
   props: ['show', 'RoundResult', 'round'],
   data() {
     return {
+      projectName: '',
+      showProjectDetail: false,
+      projectDetailList: [],
       Round1Result: []
     }
   },
   methods: {
-    async getProjectVoteDetail(id) {
+    async getProjectVoteDetail(id, name) {
+      this.projectDetailList = []
+      this.projectName = ''
+      this.showProjectDetail = true
       let url = 'getProjectDetailRound1'
       if (this.round != 1) {
         url = 'getProjectDetailRound2'
@@ -126,6 +125,8 @@ export default {
         }
       })
       console.log(r.data)
+      this.projectDetailList = r.data
+      this.projectName = name
     },
     getTrustCount(item) {
       if (item.trustCount != undefined) {
