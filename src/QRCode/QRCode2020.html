@@ -125,7 +125,8 @@
     { name: '宋丹', role: '成员', id: 1565745535443000 },
     { name: '张盛彬', role: '成员', id: 1565745544241000 },
     { name: '刘海生', role: '成员', id: 1591577671819399 },
-    { name: '赵东波', role: '成员', id: 1591577681915099 }
+    { name: '赵东波', role: '成员', id: 1591577681915099 },
+    { name: '吴育新', role: '成员', id: 1592183481991499 }
   ]
 
   let innerHTML = ''
@@ -138,12 +139,12 @@
       let index = i + j
       if (index < users.length) {
         page += `<div class="item">
-        <div class="title">兰州石化公司</div>
-        <div class="title">2019年度项目成果投票活动</div>
-        <div class="title">投票人：${users[index].name}</div>
-        <div class="qrcode" id="${users[index].id}"></div>
-        <div class="url">${baseURL + users[index].id}</div>
-      </div>`
+          <div class="title">兰州石化公司</div>
+          <div class="title">2019年度项目成果投票活动</div>
+          <div class="title">投票人：${users[index].name}</div>
+          <div class="qrcode" id="${users[index].id}"></div>
+          <div class="url">${baseURL + users[index].id}</div>
+        </div>`
       } else {
         page += `<div class="item"></div>`
       }

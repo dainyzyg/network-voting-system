@@ -104,7 +104,7 @@ export default {
       })
       let data = r.data
       if (this.judge(data)) {
-        this.Round1Result = JSON.parse(localStorage.projects)
+        this.Round1Result = JSON.parse(localStorage.secondProjects)
       } else {
         this.Round1Result = data
       }
@@ -128,7 +128,7 @@ export default {
     },
     judge(data) {
       //首先判断本地是否有数据，如果没有直接从后台取
-      if (!localStorage.projects) {
+      if (!localStorage.secondProjects) {
         return false
       }
       //如果本地有数据，判断当前投票人是否和本地投票人相同，不同直接从后台取
@@ -147,7 +147,7 @@ export default {
       this.saveToLocalStorage()
     },
     saveToLocalStorage() {
-      localStorage.projects = JSON.stringify(this.Round1Result)
+      localStorage.secondProjects = JSON.stringify(this.Round1Result)
       localStorage.userID = this.userInfo.id
     },
     judgeData() {
